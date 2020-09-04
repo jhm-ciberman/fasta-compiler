@@ -6,7 +6,6 @@ import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.Token;
 import com.ciberman.fastacompiler.lexer.TokenType;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Main {
