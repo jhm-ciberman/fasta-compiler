@@ -26,7 +26,9 @@ public class State3 implements State {
     private String validateLong(LexerContext ctx) throws LexicalException {
         String value = ctx.value();
         try {
-            long longValue = Long.parseUnsignedLong(value);
+            if (Long.parseLong(value) > 2147483647) {
+                throw new LexicalException(ctx, "Long value " + value + " out of range");
+            }
         } catch (NumberFormatException e) {
             throw new LexicalException(ctx, "Long value " + value + " out of range");
         }
@@ -36,7 +38,10 @@ public class State3 implements State {
     private String validateInt(LexerContext ctx) throws LexicalException {
         String value = ctx.value();
         try {
-            int intValue = Integer.parseUnsignedInt(value);
+            if (Integer.parseInt(value) > 32767) {
+                throw new LexicalException(ctx, "Integer value " + value + " out of range");
+            }
+
         } catch (NumberFormatException e) {
             throw new LexicalException(ctx, "Integer value " + value + " out of range");
         }

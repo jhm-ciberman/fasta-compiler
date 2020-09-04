@@ -15,10 +15,6 @@ public class LexicalWarning extends LexicalException {
         super(ctx, message);
     }
 
-    public LexicalWarning(LexerContext ctx) {
-        super(ctx);
-    }
-
     @Override
     public boolean isCritical() {
         return false;

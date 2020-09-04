@@ -10,12 +10,8 @@ repositories {
     mavenCentral()
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src']
-        }
-    }
+test {
+    useJUnitPlatform()
 }
 
 application {
@@ -23,6 +19,6 @@ application {
 }
 
 dependencies {
-    implementation 'com.intellij:annotations:+@jar'
-    implementation 'junit:junit:4.12'
+    implementation('com.intellij:annotations:+@jar')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
 }

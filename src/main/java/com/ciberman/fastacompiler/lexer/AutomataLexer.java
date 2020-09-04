@@ -12,11 +12,11 @@ public class AutomataLexer implements Lexer, LexerContext {
 
     private final Reader reader;
 
-    private StringBuilder currentValue = new StringBuilder(20);
+    private final StringBuilder currentValue = new StringBuilder(20);
 
     private Token token = null;
 
-    private String fileName;
+    private final String fileName;
     private int lineNumber = 1;
     private int colNumber = 0;
 
@@ -39,7 +39,7 @@ public class AutomataLexer implements Lexer, LexerContext {
             new State11(),
     };
 
-    public AutomataLexer(InputStream inputStream) throws IOException {
+    public AutomataLexer(InputStream inputStream) {
         this(new InputStreamReader(inputStream), "");
     }
 
@@ -47,7 +47,11 @@ public class AutomataLexer implements Lexer, LexerContext {
         this(new InputStreamReader(new FileInputStream(fileName)), fileName);
     }
 
-    public AutomataLexer(Reader reader, String fileName) throws IOException {
+    public AutomataLexer(Reader reader) {
+        this(reader, "");
+    }
+
+    public AutomataLexer(Reader reader, String fileName) {
         this.fileName = fileName == null ? "" : fileName;
         this.reader = new BufferedReader(reader);
     }

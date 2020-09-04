@@ -2,8 +2,6 @@ package com.ciberman.fastacompiler.errors;
 
 import com.ciberman.fastacompiler.lexer.LexerContext;
 
-import java.util.Arrays;
-
 public class LexicalException extends Exception {
 
     private final int line;
@@ -30,10 +28,6 @@ public class LexicalException extends Exception {
 
     public LexicalException(LexerContext ctx, String message) {
         this(ctx, -1, message);
-    }
-
-    public LexicalException(LexerContext ctx) {
-        this(ctx, "Unexpected character.");
     }
 
     public boolean isCritical() {
