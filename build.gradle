@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'com.ciberman.fastacompiler'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+
+application {
+    mainClassName = 'com.ciberman.fastacompiler.Main'
+}
+
+dependencies {
+    implementation 'com.intellij:annotations:+@jar'
+    implementation 'junit:junit:4.12'
+}

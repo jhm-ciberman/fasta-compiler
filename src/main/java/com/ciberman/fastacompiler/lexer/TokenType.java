@@ -9,12 +9,12 @@ public enum TokenType {
     MULTIPLY, // "*"
     DIVISION, // "/"
 
-    GTE,      // ">=”
-    LTE,      // “<=”
-    LT,       // “>”
-    GT,       // “<”
-    EQ,       // “==”
-    NOTEQ,    // “<>"
+    GTE,      // ">="
+    LTE,      // "<="
+    LT,       // ">"
+    GT,       // "<"
+    EQ,       // "=="
+    NOTEQ,    // "<>"
 
     ASSIGN,   // "="
     COLON,    // ":"

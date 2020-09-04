@@ -11,6 +11,7 @@ public interface State {
      * @param codePoint The current unicode code point (character)
      * @param ctx The current Lexer context object
      * @return The next state of the automata
+     * @throws LexicalException In case of a critical lexical exception
      */
     State handle(int codePoint, LexerContext ctx) throws LexicalException;
 }

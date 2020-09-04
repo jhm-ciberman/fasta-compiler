@@ -7,7 +7,6 @@ import com.ciberman.fastacompiler.errors.LexicalWarning;
 import com.ciberman.fastacompiler.lexer.states.*;
 
 import java.io.*;
-import java.util.Arrays;
 
 public class AutomataLexer implements Lexer, LexerContext {
 

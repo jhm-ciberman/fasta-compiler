@@ -11,7 +11,7 @@ ENDIF
  Random unicode characters should be skipped too: 汉字
 }
 
-LONG mylong_long_long_string = (6522_l / 56522_l) * 2_l + 5_i;
+LONG mylong = (6522_l / 56522_l) * 2_l + 5_i;
 
 PRINT 'My long is '
 PRINT mylong;
