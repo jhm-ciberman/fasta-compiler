@@ -11,7 +11,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Lexer lexer = new AutomataLexer("./input/test.fasta");
+        String inputFile = (args.length > 0) ? args[0] : "./input/test.fasta";
+
+        Lexer lexer = new AutomataLexer(inputFile);
 
         try {
             Token token = lexer.getNextToken();
@@ -25,6 +27,12 @@ public class Main {
 
         } catch (LexicalException e) {
             e.printStackTrace();
+        }
+
+        SymbolTable symbolTable = lexer.getSymbolTable();
+        System.out.println("=> Symbol Table: ");
+        for (Symbol symbol : symbolTable.all()) {
+            System.out.println(symbol.toString());
         }
     }
 }

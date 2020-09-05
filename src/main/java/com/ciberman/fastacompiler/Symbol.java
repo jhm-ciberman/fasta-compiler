@@ -1,40 +1,37 @@
 package com.ciberman.fastacompiler;
 
-import java.util.Objects;
-
 public class Symbol {
+
+    public enum Type {
+        UNKNOWN, INT, LONG, STRING,
+    }
 
     private final String name;
 
-    private String type; // Change my later!
+    private Type type; // Change my later!
 
-    public Symbol(String name) {
+    public Symbol(String name, Type type) {
         this.name = name;
+        this.type = type;
     }
 
     public String getName() {
         return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
+    public Type getType() {
+        return this.type;
+    }
 
-        if (o instanceof String) {
-            String string = (String) o;
-            return name.equals(string);
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        Symbol symbol = (Symbol) o;
-        return name.equals(symbol.name);
+    public void setType(Type type) {
+        this.type = type;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name);
+    public String toString() {
+        return "Symbol{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                '}';
     }
 }

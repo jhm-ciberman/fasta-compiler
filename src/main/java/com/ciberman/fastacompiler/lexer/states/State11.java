@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.lexer.states;
 
+import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.lexer.LexerContext;
 import com.ciberman.fastacompiler.lexer.Token;
@@ -13,7 +14,9 @@ public class State11 implements State {
         }
 
         if (codePoint == '\'') {
-            return ctx.yieldToken(new Token(ctx, TokenType.STR, ctx.value()));
+            String value = ctx.value();
+            return ctx.addSymbol(new Symbol(value, Symbol.Type.STRING))
+                    .yieldToken(new Token(ctx, TokenType.STR, value));
         }
 
         if (codePoint != '\n') {

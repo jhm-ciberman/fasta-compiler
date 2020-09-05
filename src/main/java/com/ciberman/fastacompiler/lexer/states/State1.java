@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.lexer.states;
 
+import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
 import com.ciberman.fastacompiler.lexer.LexerContext;
@@ -20,6 +21,8 @@ public class State1 implements State {
             ctx.warning(new LexicalWarning(ctx, "The identifier name \""+ ctx.value() + "\" is larger than 20 characters. Using \"" + value + "\"."));
         }
 
-        return ctx.peek().yieldToken(new Token(ctx, TokenType.ID, value));
+        return ctx.peek()
+            .addSymbol(new Symbol(value, Symbol.Type.UNKNOWN))
+            .andYieldToken(new Token(ctx, TokenType.ID, value));
     }
 }

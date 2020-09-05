@@ -7,6 +7,10 @@ public class State6 implements State {
 
     @Override
     public State handle(int codePoint, LexerContext ctx) throws LexicalException {
+        if (codePoint == -1) {
+            return ctx.peek().goToState(0);
+        }
+
         return ctx.goToState((codePoint == '}') ? 0 : 6);
     }
 }

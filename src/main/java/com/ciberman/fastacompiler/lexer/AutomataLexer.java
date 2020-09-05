@@ -2,6 +2,8 @@ package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.ConsoleErrorHandler;
 import com.ciberman.fastacompiler.ErrorHandler;
+import com.ciberman.fastacompiler.Symbol;
+import com.ciberman.fastacompiler.SymbolTable;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
 import com.ciberman.fastacompiler.lexer.states.*;
@@ -9,6 +11,21 @@ import com.ciberman.fastacompiler.lexer.states.*;
 import java.io.*;
 
 public class AutomataLexer implements Lexer, LexerContext {
+
+    private static final State[] states = new State[] {
+            new StateS(),
+            new State1(),
+            new State2(),
+            new State3(),
+            new State4(),
+            new State5(),
+            new State6(),
+            new State7(),
+            new State8(),
+            new State9(),
+            new State10(),
+            new State11(),
+    };
 
     private final Reader reader;
 
@@ -24,20 +41,7 @@ public class AutomataLexer implements Lexer, LexerContext {
 
     public ErrorHandler errorHandler = new ConsoleErrorHandler();
 
-    private final State[] states = new State[] {
-            new StateS(),
-            new State1(),
-            new State2(),
-            new State3(),
-            new State4(),
-            new State5(),
-            new State6(),
-            new State7(),
-            new State8(),
-            new State9(),
-            new State10(),
-            new State11(),
-    };
+    private final SymbolTable symbolTable = new SymbolTable();
 
     public AutomataLexer(InputStream inputStream) {
         this(new InputStreamReader(inputStream), "");
@@ -75,7 +79,7 @@ public class AutomataLexer implements Lexer, LexerContext {
 
     @Override
     public State goToState(int stateNumber) {
-        return this.states[stateNumber];
+        return AutomataLexer.states[stateNumber];
     }
 
     @Override
@@ -120,11 +124,18 @@ public class AutomataLexer implements Lexer, LexerContext {
         return this;
     }
 
+    @Override
+    public LexerContext addSymbol(Symbol symbol) {
+        this.symbolTable.add(symbol);
+        return this;
+    }
+
+
 
     @Override
     public Token getNextToken() throws IOException, LexicalException {
 
-        State currentState = new StateS();
+        State currentState = AutomataLexer.states[0]; // 0 = StateS
 
         this.currentValue.setLength(0); // Clear the string builder. It's faster than allocating a new one
         this.token = null;
@@ -149,6 +160,11 @@ public class AutomataLexer implements Lexer, LexerContext {
         }
 
         return this.token;
+    }
+
+    @Override
+    public SymbolTable getSymbolTable() {
+        return this.symbolTable;
     }
 
     private int readNextCodePoint() throws IOException {

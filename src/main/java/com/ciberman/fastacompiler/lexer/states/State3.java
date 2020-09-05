@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.lexer.states;
 
+import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.lexer.LexerContext;
 import com.ciberman.fastacompiler.lexer.Token;
@@ -12,12 +13,14 @@ public class State3 implements State {
 
         if (codePoint == 'i') {
             String value = this.validateInt(ctx);
-            return ctx.yieldToken(new Token(ctx, TokenType.INT, value));
+            return ctx.addSymbol(new Symbol(value, Symbol.Type.INT))
+                    .andYieldToken(new Token(ctx, TokenType.INT, value));
         }
 
         if (codePoint == 'l') {
             String value = this.validateLong(ctx);
-            return ctx.yieldToken(new Token(ctx, TokenType.LONG, value));
+            return ctx.addSymbol(new Symbol(value, Symbol.Type.LONG))
+                    .andYieldToken(new Token(ctx, TokenType.LONG, value));
         }
 
         throw new LexicalException(ctx, codePoint, "Integer literals must terminate with \"i\" or \"l\".");

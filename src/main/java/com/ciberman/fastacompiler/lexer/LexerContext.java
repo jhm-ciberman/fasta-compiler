@@ -1,10 +1,8 @@
 package com.ciberman.fastacompiler.lexer;
 
-import com.ciberman.fastacompiler.errors.LexicalException;
+import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
 import com.ciberman.fastacompiler.lexer.states.State;
-
-import java.io.IOException;
 
 public interface LexerContext {
 
@@ -71,4 +69,9 @@ public interface LexerContext {
      * @return Itself for fluent chaining
      */
     LexerContext warning(LexicalWarning warning);
+
+    /**
+     * Add symbol to symbol table
+     */
+    LexerContext addSymbol(Symbol symbol);
 }
