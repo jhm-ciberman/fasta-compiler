@@ -43,12 +43,8 @@ public class AutomataLexer implements Lexer, LexerContext {
 
     private final SymbolTable symbolTable = new SymbolTable();
 
-    public AutomataLexer(InputStream inputStream) {
-        this(new InputStreamReader(inputStream), "");
-    }
-
-    public AutomataLexer(String fileName) throws IOException {
-        this(new InputStreamReader(new FileInputStream(fileName)), fileName);
+    public AutomataLexer(InputStream inputStream, String inputName) {
+        this(new InputStreamReader(inputStream), inputName);
     }
 
     public AutomataLexer(Reader reader) {

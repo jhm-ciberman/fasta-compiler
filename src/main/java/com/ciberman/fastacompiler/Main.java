@@ -6,14 +6,22 @@ import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.Token;
 import com.ciberman.fastacompiler.lexer.TokenType;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        String inputFile = (args.length > 0) ? args[0] : "./input/test.fasta";
 
-        Lexer lexer = new AutomataLexer(inputFile);
+        Lexer lexer;
+        if (args.length > 0) {
+            lexer = new AutomataLexer(new FileInputStream(args[0]), args[0]);
+        } else {
+            String name = "test.fasta";
+            InputStream stream = Main.class.getClassLoader().getResourceAsStream(name);
+            lexer = new AutomataLexer(stream, name);
+        }
 
         try {
             Token token = lexer.getNextToken();
