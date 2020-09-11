@@ -25,23 +25,38 @@ public class StateS implements State {
             return ctx.goToState(0);
         }
 
-        return switch (codePoint) {
-            case -1   -> ctx.yieldToken(new Token(ctx, TokenType.EOF));
-            case '+'  -> ctx.yieldToken(new Token(ctx, TokenType.PLUS));
-            case '-'  -> ctx.yieldToken(new Token(ctx, TokenType.MINUS));
-            case '*'  -> ctx.yieldToken(new Token(ctx, TokenType.MULTIPLY));
-            case '/'  -> ctx.goToState(4);
-            case '{'  -> ctx.goToState(6);
-            case '('  -> ctx.yieldToken(new Token(ctx, TokenType.LPAREN));
-            case ')'  -> ctx.yieldToken(new Token(ctx, TokenType.RPAREN));
-            case ','  -> ctx.yieldToken(new Token(ctx, TokenType.COLON));
-            case ';'  -> ctx.yieldToken(new Token(ctx, TokenType.SEMI));
-            case '\'' -> ctx.goToState(11);
-            case '<'  -> ctx.goToState(8);
-            case '>'  -> ctx.goToState(7);
-            case '='  -> ctx.goToState(9);
-            default   -> throw new LexicalException(ctx, codePoint);
-        };
+        switch (codePoint) {
+            case -1:
+                return ctx.yieldToken(new Token(ctx, TokenType.EOF));
+            case '+':
+                return ctx.yieldToken(new Token(ctx, TokenType.PLUS));
+            case '-':
+                return ctx.yieldToken(new Token(ctx, TokenType.MINUS));
+            case '*':
+                return ctx.yieldToken(new Token(ctx, TokenType.MULTIPLY));
+            case '/':
+                return ctx.goToState(4);
+            case '{':
+                return ctx.goToState(6);
+            case '(':
+                return ctx.yieldToken(new Token(ctx, TokenType.LPAREN));
+            case ')':
+                return ctx.yieldToken(new Token(ctx, TokenType.RPAREN));
+            case ',':
+                return ctx.yieldToken(new Token(ctx, TokenType.COLON));
+            case ';':
+                return ctx.yieldToken(new Token(ctx, TokenType.SEMI));
+            case '\'':
+                return ctx.goToState(11);
+            case '<':
+                return ctx.goToState(8);
+            case '>':
+                return ctx.goToState(7);
+            case '=':
+                return ctx.goToState(9);
+            default:
+                throw new LexicalException(ctx, codePoint);
+        }
 
     }
 }

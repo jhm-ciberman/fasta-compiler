@@ -18,6 +18,11 @@ application {
     mainClassName = 'com.ciberman.fastacompiler.Main'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 sourceSets {
     main {
         resources {

@@ -12,21 +12,47 @@ public class State10 implements State {
             return ctx.save().andGoToState(10);
         }
 
-        TokenType type = switch (ctx.value()) {
-            case "IF"     -> TokenType.IF;
-            case "THEN"   -> TokenType.THEN;
-            case "ELSE"   -> TokenType.ELSE;
-            case "ENDIF"  -> TokenType.ENDIF;
-            case "PRINT"  -> TokenType.PRINT;
-            case "BEGIN"  -> TokenType.BEGIN;
-            case "END"    -> TokenType.END;
-            case "INT"    -> TokenType.TYPE_INT;
-            case "LONG"   -> TokenType.TYPE_LONG;
-            case "LOOP"   -> TokenType.LOOP;
-            case "UNTIL"  -> TokenType.UNTIL;
-            case "ITOL"   -> TokenType.ITOL;
-            default -> throw new LexicalException(ctx, "Invalid keyword \"" + ctx.value() + "\".");
-        };
+        TokenType type;
+        switch (ctx.value()) {
+            case "IF":
+                type = TokenType.IF;
+                break;
+            case "THEN":
+                type = TokenType.THEN;
+                break;
+            case "ELSE":
+                type = TokenType.ELSE;
+                break;
+            case "ENDIF":
+                type = TokenType.ENDIF;
+                break;
+            case "PRINT":
+                type = TokenType.PRINT;
+                break;
+            case "BEGIN":
+                type = TokenType.BEGIN;
+                break;
+            case "END":
+                type = TokenType.END;
+                break;
+            case "INT":
+                type = TokenType.TYPE_INT;
+                break;
+            case "LONG":
+                type = TokenType.TYPE_LONG;
+                break;
+            case "LOOP":
+                type = TokenType.LOOP;
+                break;
+            case "UNTIL":
+                type = TokenType.UNTIL;
+                break;
+            case "ITOL":
+                type = TokenType.ITOL;
+                break;
+            default:
+                throw new LexicalException(ctx, "Invalid keyword \"" + ctx.value() + "\".");
+        }
 
         return ctx.peek().andYieldToken(new Token(ctx, type));
     }
