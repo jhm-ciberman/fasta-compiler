@@ -31,8 +31,6 @@ if "%FileSize%" == "" (
     )
 )
 
-echo nonono
-
 :success
 echo Success
 del yacc.err
