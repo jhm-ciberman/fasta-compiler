@@ -16,7 +16,7 @@ This project uses Gradle. To build and run use:
 gradlew run
 ````
 
-To run the tests:
+To run the unit tests:
 
 ````
 gradlew test
@@ -27,3 +27,12 @@ To create the dist zip/tar files:
 ````
 gradlew assembleDist
 ````
+
+The YACC grammar file for the parser is located at `src/main/java/com/ciberman/fastacompiler/parser/grammar.y`. 
+To automatically run [BYACC/J](http://byaccj.sourceforge.net/) and regenerate the Parser java file, 
+run the following graddle task (Windows only): 
+
+````
+gradlew parser
+````
+

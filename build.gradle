@@ -23,6 +23,20 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+task parser(type:Exec) {
+    def srcDir = './src/main/java/com/ciberman/fastacompiler/parser/'
+    inputs.file(srcDir + 'grammar.y')
+    outputs.files([
+            srcDir + 'Parser.java',
+            srcDir + 'ParserVal.java',
+    ])
+
+    workingDir srcDir
+    commandLine 'cmd', '/c', 'generate.bat'
+}
+
+tasks.compileJava.dependsOn(parser)
+
 sourceSets {
     main {
         resources {

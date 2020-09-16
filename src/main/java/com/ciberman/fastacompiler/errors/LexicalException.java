@@ -2,7 +2,7 @@ package com.ciberman.fastacompiler.errors;
 
 import com.ciberman.fastacompiler.lexer.LexerContext;
 
-public class LexicalException extends Exception {
+public class LexicalException extends FastaException {
 
     private final int line;
 
@@ -12,26 +12,38 @@ public class LexicalException extends Exception {
 
     private final String fileName;
 
-    private final String message;
+    public LexicalException(LexerContext ctx, int codePoint) {
+        this(ctx, codePoint, "");
+    }
 
     public LexicalException(LexerContext ctx, int codePoint, String message) {
+        super(LexicalException.buildMessage(codePoint, message));
         this.line = ctx.line();
         this.col = ctx.col();
         this.codePoint = codePoint;
         this.fileName = ctx.fileName();
-        this.message = message;
     }
 
-    public LexicalException(LexerContext ctx, int codePoint) {
-        this(ctx, codePoint, "");
+    private static String buildMessage(int codePoint, String message) {
+        StringBuilder s = new StringBuilder();
+        if (codePoint >= 0) {
+            s.append("Unexpected character \"")
+                    .append(new String(new int[]{codePoint}, 0, 1))
+                    .append("\".");
+
+        }
+        if (! message.isBlank()) {
+            s.append(" ").append(message);
+        }
+        return s.toString();
     }
 
     public LexicalException(LexerContext ctx, String message) {
         this(ctx, -1, message);
     }
 
-    public boolean isCritical() {
-        return true;
+    public ErrorLevel getLevel() {
+        return ErrorLevel.ERROR;
     }
 
     protected String getErrorLevelStr() {
@@ -50,36 +62,7 @@ public class LexicalException extends Exception {
         return this.col;
     }
 
-    public String getMessage() {
-        return this.message;
-    }
-
     public int getUnicodeCodePoint() {
         return this.codePoint;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        s.append(this.getFileName())
-                .append("[")
-                .append(this.getLine())
-                .append(":")
-                .append(this.getCol())
-                .append("] ")
-                .append(this.getErrorLevelStr());
-
-        int cp = this.getUnicodeCodePoint();
-        if (cp >= 0) {
-            s.append(" Unexpected character \"")
-                    .append(new String(new int[]{cp}, 0, 1))
-                    .append("\".");
-        }
-
-        String m = this.getMessage();
-        if (! m.isBlank()) {
-            s.append(" ").append(m);
-        }
-        return s.toString();
     }
 }

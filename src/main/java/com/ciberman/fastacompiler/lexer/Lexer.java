@@ -14,5 +14,13 @@ public interface Lexer {
      */
     Token getNextToken() throws IOException, LexicalException;
 
+    /**
+     * @return The current file name
+     */
+    String fileName();
+
+    /**
+     * @return The symbol table
+     */
     SymbolTable getSymbolTable();
 }

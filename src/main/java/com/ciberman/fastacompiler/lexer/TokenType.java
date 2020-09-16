@@ -41,6 +41,6 @@ public enum TokenType {
     ITOL;
 
     public int code() {
-        return this == TokenType.EOF ? 0 : this.ordinal() + 255;
+        return this == TokenType.EOF ? 0 : this.ordinal() + 256;
     }
 }

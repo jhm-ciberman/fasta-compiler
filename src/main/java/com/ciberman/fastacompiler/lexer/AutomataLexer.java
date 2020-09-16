@@ -4,6 +4,7 @@ import com.ciberman.fastacompiler.ConsoleErrorHandler;
 import com.ciberman.fastacompiler.ErrorHandler;
 import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.SymbolTable;
+import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
 import com.ciberman.fastacompiler.lexer.states.*;
@@ -146,7 +147,7 @@ public class AutomataLexer implements Lexer, LexerContext {
                 currentState = currentState.handle(codePoint, this);
 
             } catch (LexicalException exception) {
-                if (exception.isCritical()) {
+                if (exception.getLevel() == FastaException.ErrorLevel.ERROR) {
                     this.errorHandler.error(exception);
                     throw exception; // Rethrow critical exception!
                 } else {
