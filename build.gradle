@@ -25,7 +25,10 @@ java {
 
 task parser(type:Exec) {
     def srcDir = './src/main/java/com/ciberman/fastacompiler/parser/'
-    inputs.file(srcDir + 'grammar.y')
+    inputs.files([
+            srcDir + 'grammar.y',
+            srcDir + 'generate.bat',
+    ])
     outputs.files([
             srcDir + 'Parser.java',
             srcDir + 'ParserVal.java',

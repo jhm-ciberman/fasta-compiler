@@ -23,7 +23,7 @@ import java.io.IOException;
 %token NOTEQ    // "<>"
 
 %token ASSIGN   // "="
-%token COLON    // ":"
+%token COMMA    // ","
 %token SEMI     // ";"
 %token LBRACE   // "{"
 %token RBRACE   // "}"
@@ -51,22 +51,48 @@ import java.io.IOException;
 
 %%
 
+program
+	: scope                             { System.out.println("scope"); }
+
+scope
+	: ID LBRACE statement_list RBRACE   { System.out.println("scope"); }
+
+statement_list
+	: statement
+	| statement statement_list          { System.out.println("statement statement_list"); }
+
+statement
+	: SEMI                              { System.out.println("SEMI"); }
+	| scope                             { System.out.println("scope"); }
+	| var_declaration                   { System.out.println("var_declaration"); }
+// 	| if_statement                      { System.out.println("if_statement"); }
+	| expr SEMI                         { System.out.println("expr SEMI"); }
+
+var_declaration
+	: TYPE_INT var_list                 { System.out.println("TYPE_INT var_list"); }
+	| TYPE_LONG var_list                { System.out.println("TYPE_LONG var_list"); }
+
+var_list
+	: ID                                { System.out.println("ID"); }
+	| ID COMMA var_list                 { System.out.println("ID COMMA var_list"); }
+
+
+
 expr
-	: term PLUS term           { System.out.println("term PLUS term"); }
-	| term MINUS term          { System.out.println("term MINUS term"); }
-	| term                     { System.out.println("term"); }
+	: term PLUS term                    { System.out.println("term PLUS term"); }
+	| term MINUS term                   { System.out.println("term MINUS term"); }
+	| term                              { System.out.println("term"); }
 
 term
-	: factor MULTIPLY factor   { System.out.println("factor MULTIPLY factor"); }
-	| factor DIVISION factor   { System.out.println("factor DIVISION factor"); }
-	| factor                   { System.out.println("factor"); }
+	: factor MULTIPLY factor            { System.out.println("factor MULTIPLY factor"); }
+	| factor DIVISION factor            { System.out.println("factor DIVISION factor"); }
+	| factor                            { System.out.println("factor"); }
 
 factor
-	: INT                      { System.out.println("INT"); }
-	| LONG                     { System.out.println("LONG"); }
-	| PLUS factor              { System.out.println("PLUS factor"); }
-	| MINUS factor             { System.out.println("PLUS factor"); }
-	;
+	: INT                               { System.out.println("INT"); }
+	| LONG                              { System.out.println("LONG"); }
+	| PLUS factor                       { System.out.println("PLUS factor"); }
+	| MINUS factor                      { System.out.println("MINUS factor"); }
 
 %%
 

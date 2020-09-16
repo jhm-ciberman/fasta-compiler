@@ -1,1 +1,3 @@
-1_i
+myprogram {
+    1_i + 2_i;
+}

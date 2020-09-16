@@ -95,8 +95,8 @@ class AutomataLexerTest {
     }
 
     @Test
-    void shouldParseColon() throws IOException, LexicalException {
-        this.assertToken(",", TokenType.COLON);
+    void shouldParseComma() throws IOException, LexicalException {
+        this.assertToken(",", TokenType.COMMA);
     }
 
     @Test

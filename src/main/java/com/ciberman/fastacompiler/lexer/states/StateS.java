@@ -47,7 +47,7 @@ public class StateS implements State {
             case ')':
                 return ctx.yieldToken(new Token(ctx, TokenType.RPAREN));
             case ',':
-                return ctx.yieldToken(new Token(ctx, TokenType.COLON));
+                return ctx.yieldToken(new Token(ctx, TokenType.COMMA));
             case ';':
                 return ctx.yieldToken(new Token(ctx, TokenType.SEMI));
             case '\'':

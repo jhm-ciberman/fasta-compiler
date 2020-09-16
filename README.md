@@ -30,7 +30,8 @@ gradlew assembleDist
 
 The YACC grammar file for the parser is located at `src/main/java/com/ciberman/fastacompiler/parser/grammar.y`. 
 To automatically run [BYACC/J](http://byaccj.sourceforge.net/) and regenerate the Parser java file, 
-run the following graddle task (Windows only): 
+run the following graddle task (Windows only). 
+Note that this task will run automatically when you run or build the project.
 
 ````
 gradlew parser

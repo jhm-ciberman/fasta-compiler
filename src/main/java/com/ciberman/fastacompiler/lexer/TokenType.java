@@ -16,8 +16,8 @@ public enum TokenType {
     EQ,       // "=="
     NOTEQ,    // "<>"
 
-    ASSIGN,   // "="
-    COLON,    // ":"
+    ASSIGN,   // ":="
+    COMMA,    // ","
     SEMI,     // ";"
     LBRACE,   // "{"
     RBRACE,   // "}"
