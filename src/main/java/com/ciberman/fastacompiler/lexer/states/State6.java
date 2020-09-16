@@ -11,6 +11,6 @@ public class State6 implements State {
             return ctx.peek().goToState(0);
         }
 
-        return ctx.goToState((codePoint == '}') ? 0 : 6);
+        return ctx.goToState((codePoint == '#') ? 0 : 6);
     }
 }

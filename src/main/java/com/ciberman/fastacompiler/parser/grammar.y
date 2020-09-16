@@ -7,7 +7,6 @@ import com.ciberman.fastacompiler.lexer.Token;
 import java.io.IOException;
 %}
 
-/* YACC Declarations */
 // %token EOF = 0
 %token ID
 
@@ -26,6 +25,8 @@ import java.io.IOException;
 %token ASSIGN   // "="
 %token COLON    // ":"
 %token SEMI     // ";"
+%token LBRACE   // "{"
+%token RBRACE   // "}"
 %token LPAREN   // "("
 %token RPAREN   // ")"
 
@@ -50,7 +51,7 @@ import java.io.IOException;
 
 %%
 
-additiveExpression
+expr
 	: term PLUS term           { System.out.println("term PLUS term"); }
 	| term MINUS term          { System.out.println("term MINUS term"); }
 	| term                     { System.out.println("term"); }

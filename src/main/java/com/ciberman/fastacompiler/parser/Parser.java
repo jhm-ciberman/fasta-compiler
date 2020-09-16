@@ -175,23 +175,25 @@ public final static short NOTEQ=267;
 public final static short ASSIGN=268;
 public final static short COLON=269;
 public final static short SEMI=270;
-public final static short LPAREN=271;
-public final static short RPAREN=272;
-public final static short INT=273;
-public final static short LONG=274;
-public final static short STR=275;
-public final static short IF=276;
-public final static short THEN=277;
-public final static short ELSE=278;
-public final static short ENDIF=279;
-public final static short PRINT=280;
-public final static short BEGIN=281;
-public final static short END=282;
-public final static short TYPE_INT=283;
-public final static short TYPE_LONG=284;
-public final static short LOOP=285;
-public final static short UNTIL=286;
-public final static short ITOL=287;
+public final static short LBRACE=271;
+public final static short RBRACE=272;
+public final static short LPAREN=273;
+public final static short RPAREN=274;
+public final static short INT=275;
+public final static short LONG=276;
+public final static short STR=277;
+public final static short IF=278;
+public final static short THEN=279;
+public final static short ELSE=280;
+public final static short ENDIF=281;
+public final static short PRINT=282;
+public final static short BEGIN=283;
+public final static short END=284;
+public final static short TYPE_INT=285;
+public final static short TYPE_LONG=286;
+public final static short LOOP=287;
+public final static short UNTIL=288;
+public final static short ITOL=289;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    0,    0,    1,    1,    1,    2,    2,    2,    2,
@@ -223,7 +225,7 @@ static { yytable();}
 static void yytable(){
 yytable = new short[]{                          0,
     6,    1,    2,    8,    9,   10,   11,    3,   12,   13,
-    0,   14,   15,    0,   16,   17,    3,    4,    0,    0,
+    0,   14,   15,    0,   16,   17,    0,    0,    3,    4,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -255,7 +257,7 @@ static { yycheck(); }
 static void yycheck() {
 yycheck = new short[] {                         -1,
     0,  258,  259,    1,    2,  258,  259,    0,  260,  261,
-   -1,   10,   11,   -1,   12,   13,  273,  274,   -1,   -1,
+   -1,   10,   11,   -1,   12,   13,   -1,   -1,  275,  276,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
@@ -283,7 +285,7 @@ yycheck = new short[] {                         -1,
 };
 }
 final static short YYFINAL=5;
-final static short YYMAXTOKEN=287;
+final static short YYMAXTOKEN=289;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
@@ -302,15 +304,15 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,"ID","PLUS","MINUS","MULTIPLY","DIVISION","GTE","LTE","LT","GT",
-"EQ","NOTEQ","ASSIGN","COLON","SEMI","LPAREN","RPAREN","INT","LONG","STR","IF",
-"THEN","ELSE","ENDIF","PRINT","BEGIN","END","TYPE_INT","TYPE_LONG","LOOP",
-"UNTIL","ITOL",
+"EQ","NOTEQ","ASSIGN","COLON","SEMI","LBRACE","RBRACE","LPAREN","RPAREN","INT",
+"LONG","STR","IF","THEN","ELSE","ENDIF","PRINT","BEGIN","END","TYPE_INT",
+"TYPE_LONG","LOOP","UNTIL","ITOL",
 };
 final static String yyrule[] = {
-"$accept : additiveExpression",
-"additiveExpression : term PLUS term",
-"additiveExpression : term MINUS term",
-"additiveExpression : term",
+"$accept : expr",
+"expr : term PLUS term",
+"expr : term MINUS term",
+"expr : term",
 "term : factor MULTIPLY factor",
 "term : factor DIVISION factor",
 "term : factor",
@@ -320,7 +322,7 @@ final static String yyrule[] = {
 "factor : MINUS factor",
 };
 
-//#line 71 "grammar.y"
+//#line 72 "grammar.y"
 
 protected Lexer lexer;
 
@@ -349,7 +351,7 @@ protected int yylex() throws IOException, LexicalException {
 public void parse() throws IOException, LexicalException, SyntaxException {
 	this.yyparse();
 }
-//#line 280 "Parser.java"
+//#line 282 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -505,46 +507,46 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 54 "grammar.y"
+//#line 55 "grammar.y"
 { System.out.println("term PLUS term"); }
 break;
 case 2:
-//#line 55 "grammar.y"
+//#line 56 "grammar.y"
 { System.out.println("term MINUS term"); }
 break;
 case 3:
-//#line 56 "grammar.y"
+//#line 57 "grammar.y"
 { System.out.println("term"); }
 break;
 case 4:
-//#line 59 "grammar.y"
+//#line 60 "grammar.y"
 { System.out.println("factor MULTIPLY factor"); }
 break;
 case 5:
-//#line 60 "grammar.y"
+//#line 61 "grammar.y"
 { System.out.println("factor DIVISION factor"); }
 break;
 case 6:
-//#line 61 "grammar.y"
+//#line 62 "grammar.y"
 { System.out.println("factor"); }
 break;
 case 7:
-//#line 64 "grammar.y"
+//#line 65 "grammar.y"
 { System.out.println("INT"); }
 break;
 case 8:
-//#line 65 "grammar.y"
+//#line 66 "grammar.y"
 { System.out.println("LONG"); }
 break;
 case 9:
-//#line 66 "grammar.y"
-{ System.out.println("PLUS factor"); }
-break;
-case 10:
 //#line 67 "grammar.y"
 { System.out.println("PLUS factor"); }
 break;
-//#line 469 "Parser.java"
+case 10:
+//#line 68 "grammar.y"
+{ System.out.println("PLUS factor"); }
+break;
+//#line 471 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

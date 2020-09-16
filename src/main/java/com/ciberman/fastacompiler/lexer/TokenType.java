@@ -19,6 +19,8 @@ public enum TokenType {
     ASSIGN,   // "="
     COLON,    // ":"
     SEMI,     // ";"
+    LBRACE,   // "{"
+    RBRACE,   // "}"
     LPAREN,   // "("
     RPAREN,   // ")"
 

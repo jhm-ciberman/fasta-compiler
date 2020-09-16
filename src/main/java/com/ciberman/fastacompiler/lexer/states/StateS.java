@@ -34,9 +34,13 @@ public class StateS implements State {
                 return ctx.yieldToken(new Token(ctx, TokenType.MINUS));
             case '*':
                 return ctx.yieldToken(new Token(ctx, TokenType.MULTIPLY));
+            case '{':
+                return ctx.yieldToken(new Token(ctx, TokenType.LBRACE));
+            case '}':
+                return ctx.yieldToken(new Token(ctx, TokenType.RBRACE));
             case '/':
                 return ctx.goToState(4);
-            case '{':
+            case '#':
                 return ctx.goToState(6);
             case '(':
                 return ctx.yieldToken(new Token(ctx, TokenType.LPAREN));

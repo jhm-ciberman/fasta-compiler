@@ -89,6 +89,12 @@ class AutomataLexerTest {
     }
 
     @Test
+    void shouldParseBraces() throws IOException, LexicalException {
+        this.assertToken("{", TokenType.LBRACE);
+        this.assertToken("}", TokenType.RBRACE);
+    }
+
+    @Test
     void shouldParseColon() throws IOException, LexicalException {
         this.assertToken(",", TokenType.COLON);
     }
@@ -157,13 +163,6 @@ class AutomataLexerTest {
     @Test
     void shouldSkipComments() throws IOException, LexicalException {
         this.assertToken("// this is a comment\nINT", TokenType.TYPE_INT);
-        this.assertToken("{ this is a multi\nline\ncomment}INT", TokenType.TYPE_INT);
-    }
-
-    @Test
-    void shouldThrowOnUnopenedMultilineComment() {
-        LexicalException exception = Assertions.assertThrows(LexicalException.class, () -> {
-            this.makeLexer("}").getNextToken();
-        });
+        this.assertToken("# this is a multi\nline\ncomment#INT", TokenType.TYPE_INT);
     }
 }
