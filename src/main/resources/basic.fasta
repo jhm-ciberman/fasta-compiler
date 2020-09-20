@@ -1,3 +1,21 @@
 myprogram {
-    1_i + 2_i;
+    INT a, b;
+    LONG c;
+
+    b = 3_i;
+
+    PRINT('Hello world');
+
+    // If statement
+    IF (a <= 2_i) THEN
+        BEGIN
+        a = 1_l + 2_l;
+        a = 1_l + 2_l;
+        END
+    ENDIF
+
+    // Loop until statement
+    LOOP
+        c = c + ITOL(a * b);
+    UNTIL (c > 100000_l)
 }

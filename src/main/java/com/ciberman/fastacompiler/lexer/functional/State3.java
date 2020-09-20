@@ -1,4 +1,4 @@
-package com.ciberman.fastacompiler.lexer.states;
+package com.ciberman.fastacompiler.lexer.functional;
 
 import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalException;

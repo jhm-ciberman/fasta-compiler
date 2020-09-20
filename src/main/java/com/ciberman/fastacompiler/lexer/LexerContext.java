@@ -2,7 +2,7 @@ package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
-import com.ciberman.fastacompiler.lexer.states.State;
+import com.ciberman.fastacompiler.lexer.functional.State;
 
 public interface LexerContext {
 

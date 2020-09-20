@@ -1,6 +1,7 @@
 package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.errors.LexicalException;
+import com.ciberman.fastacompiler.lexer.functional.AutomataLexer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -164,5 +165,15 @@ class AutomataLexerTest {
     void shouldSkipComments() throws IOException, LexicalException {
         this.assertToken("// this is a comment\nINT", TokenType.TYPE_INT);
         this.assertToken("# this is a multi\nline\ncomment#INT", TokenType.TYPE_INT);
+    }
+
+    @Test
+    void shouldParseParensInPrintStatements() throws IOException, LexicalException {
+        Lexer lexer = this.makeLexer("PRINT('my string');");
+        Assertions.assertEquals(TokenType.PRINT, lexer.getNextToken().getType());
+        Assertions.assertEquals(TokenType.LPAREN, lexer.getNextToken().getType());
+        Assertions.assertEquals(TokenType.STR, lexer.getNextToken().getType());
+        Assertions.assertEquals(TokenType.RPAREN, lexer.getNextToken().getType());
+        Assertions.assertEquals(TokenType.SEMI, lexer.getNextToken().getType());
     }
 }

@@ -196,60 +196,95 @@ public final static short UNTIL=288;
 public final static short ITOL=289;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
-    0,    1,    2,    2,    3,    3,    3,    3,    4,    4,
-    6,    6,    5,    5,    5,    7,    7,    7,    8,    8,
-    8,    8,
+    0,    1,    2,    2,    4,    4,    4,    6,    6,    7,
+    7,    3,    3,    8,    8,    9,    9,    5,    5,    5,
+    5,    5,   10,   10,   11,   14,   16,   16,   16,   16,
+   16,   16,   13,   12,   15,   15,   15,   17,   17,   17,
+   18,   18,   18,   18,   18,   18,
 };
 final static short yylen[] = {                            2,
-    1,    4,    1,    2,    1,    1,    1,    2,    2,    2,
-    1,    3,    3,    3,    1,    3,    3,    1,    1,    1,
-    2,    2,
+    1,    4,    2,    1,    1,    2,    2,    3,    1,    1,
+    2,    1,    2,    3,    3,    1,    3,    1,    1,    1,
+    1,    1,    5,    7,    4,    5,    1,    1,    1,    1,
+    1,    1,    4,    5,    3,    3,    1,    3,    3,    1,
+    1,    1,    1,    2,    2,    4,
 };
 final static short yydefred[] = {                         0,
-    0,    0,    1,    0,    0,    0,    5,   19,   20,    0,
-    0,    6,    0,    0,    7,    0,    0,    0,   21,   22,
-    0,    9,   10,    2,    4,    8,    0,    0,    0,    0,
-    0,   13,   14,   16,   17,   12,
+    0,    0,    1,    0,    0,   18,    0,    0,    0,    0,
+    0,    0,    0,    0,    4,    0,    0,   19,   20,   21,
+   22,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    9,    0,    7,    2,    3,    6,   13,   41,    0,    0,
+   42,   43,    0,    0,    0,    0,    0,    0,    0,    0,
+   14,   15,    0,    0,    0,   44,   45,    0,   33,    0,
+    0,    0,    0,   27,   28,   29,   30,   31,   32,    0,
+    0,    0,   17,   11,    8,   25,    0,   35,   36,   38,
+   39,    0,    0,   23,   34,   46,   26,    0,   24,
 };
 final static short yydgoto[] = {                          2,
-   12,   13,   14,   15,   16,   22,   17,   18,
+   12,   13,   14,   15,   16,   32,   54,   17,   27,   18,
+   19,   20,   21,   24,   44,   70,   45,   46,
 };
-final static short yysindex[] = {                      -243,
- -244,    0,    0, -254, -251, -251,    0,    0,    0, -240,
- -240,    0, -252, -254,    0, -233, -223, -222,    0,    0,
- -239,    0,    0,    0,    0,    0, -251, -251, -251, -251,
- -240,    0,    0,    0,    0,    0,
+final static short yysindex[] = {                      -252,
+ -249,    0,    0, -255, -242,    0, -257, -245, -239, -239,
+ -237, -223, -228, -223,    0, -223, -234,    0,    0,    0,
+    0, -251, -251, -244, -221, -220, -210, -204, -200, -217,
+    0, -214,    0,    0,    0,    0,    0,    0, -251, -251,
+    0,    0, -195, -185, -196, -184, -163, -237, -177, -239,
+    0,    0, -217, -179, -257,    0,    0, -251,    0, -251,
+ -251, -251, -251,    0,    0,    0,    0,    0,    0, -251,
+ -188, -164,    0,    0,    0,    0, -167,    0,    0,    0,
+    0, -166, -237,    0,    0,    0,    0, -172,    0,
 };
 final static short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0, -230,    0,    0, -227, -247,    0,    0,
- -257,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0, -162, -203,    0,    0,    0,
+    0,    0,    0,    0,    0, -159,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0, -253, -176,    0,    0,    0,    0,
+    0,    0, -171,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,    0,
 };
 final static short yygindex[] = {                         0,
-   44,   31,    0,    0,    0,   -5,   13,    4,
+  112,    0,   97,   57,  -11,  -44,   62,    0,   -7,    0,
+    0,    0,    0,   61,  -22,    0,   35,   18,
 };
-final static int YYTABLESIZE=45;
+final static int YYTABLESIZE=116;
 static short yytable[];
 static { yytable();}
 static void yytable(){
-yytable = new short[]{                         11,
-   11,   11,    1,    5,    6,   23,    5,    6,   19,   20,
-   18,   18,   11,    1,   11,    7,   21,   11,   11,   24,
-    8,    9,   18,    8,    9,   36,    4,   11,   11,   31,
-   10,   11,   34,   35,   27,   28,   26,   29,   30,   32,
-   33,    3,   15,    3,   25,
+yytable = new short[]{                         31,
+   47,    5,   28,   71,    1,   38,   39,   40,   37,   37,
+   37,   37,   37,   37,    6,   23,   37,   26,   53,   29,
+   37,    4,    7,   41,   42,   22,    8,   25,    4,    9,
+   10,   11,    6,    5,   48,   77,   31,   43,   88,   29,
+    7,   53,   73,   34,    8,   30,    6,   82,   50,   11,
+    9,   10,    6,   12,    7,   49,   56,   57,    8,   51,
+    7,   60,   61,   11,    8,   52,   12,   22,   33,   11,
+   35,   31,   36,   55,   12,   62,   63,   58,   12,   80,
+   81,   40,   40,   12,   59,   40,   40,   40,   40,   40,
+   40,   83,   84,   40,   78,   79,   72,   40,   64,   65,
+   66,   67,   68,   69,   75,   85,   86,   87,   89,    5,
+   16,    3,   10,   37,   74,   76,
 };
 }
 static short yycheck[];
 static { yycheck(); }
 static void yycheck() {
-yycheck = new short[] {                        257,
-  258,  259,  257,  258,  259,   11,  258,  259,    5,    6,
-  258,  259,  270,  257,  272,  270,  257,  275,  276,  272,
-  275,  276,  270,  275,  276,   31,  271,  285,  286,  269,
-  285,  286,   29,   30,  258,  259,  270,  260,  261,   27,
-   28,  272,  270,    0,   14,
+yycheck = new short[] {                         11,
+   23,  257,   10,   48,  257,  257,  258,  259,  262,  263,
+  264,  265,  266,  267,  270,  273,  270,  257,   30,  257,
+  274,  271,  278,  275,  276,  268,  282,  273,  271,  285,
+  286,  287,  270,  257,  279,   58,   48,  289,   83,  257,
+  278,   53,   50,  272,  282,  283,  270,   70,  269,  287,
+  285,  286,  270,  257,  278,  277,   39,   40,  282,  270,
+  278,  258,  259,  287,  282,  270,  270,  268,   12,  287,
+   14,   83,   16,  288,  278,  260,  261,  273,  282,   62,
+   63,  258,  259,  287,  270,  262,  263,  264,  265,  266,
+  267,  280,  281,  270,   60,   61,  274,  274,  262,  263,
+  264,  265,  266,  267,  284,  270,  274,  274,  281,  272,
+  270,    0,  284,   17,   53,   55,
 };
 }
 final static short YYFINAL=2;
@@ -279,30 +314,54 @@ null,null,null,"ID","PLUS","MINUS","MULTIPLY","DIVISION","GTE","LTE","LT","GT",
 final static String yyrule[] = {
 "$accept : program",
 "program : scope",
-"scope : ID LBRACE statement_list RBRACE",
-"statement_list : statement",
-"statement_list : statement statement_list",
-"statement : SEMI",
-"statement : scope",
-"statement : var_declaration",
-"statement : expr SEMI",
-"var_declaration : TYPE_INT var_list",
-"var_declaration : TYPE_LONG var_list",
+"scope : ID LBRACE scope_body RBRACE",
+"scope_body : var_declaration_list scope_statement_list",
+"scope_body : scope_statement_list",
+"scope_statement_list : statement",
+"scope_statement_list : statement scope_statement_list",
+"scope_statement_list : scope scope_statement_list",
+"block : BEGIN block_statement_list END",
+"block : statement",
+"block_statement_list : statement",
+"block_statement_list : statement block_statement_list",
+"var_declaration_list : var_declaration",
+"var_declaration_list : var_declaration var_declaration_list",
+"var_declaration : TYPE_INT var_list SEMI",
+"var_declaration : TYPE_LONG var_list SEMI",
 "var_list : ID",
 "var_list : ID COMMA var_list",
+"statement : SEMI",
+"statement : if_statement",
+"statement : loop_statement",
+"statement : print_statement",
+"statement : assign_statement",
+"if_statement : IF relational_expr THEN block ENDIF",
+"if_statement : IF relational_expr THEN block ELSE block ENDIF",
+"loop_statement : LOOP block UNTIL relational_expr",
+"relational_expr : LPAREN expr relational_operator expr RPAREN",
+"relational_operator : GTE",
+"relational_operator : LTE",
+"relational_operator : LT",
+"relational_operator : GT",
+"relational_operator : EQ",
+"relational_operator : NOTEQ",
+"assign_statement : ID ASSIGN expr SEMI",
+"print_statement : PRINT LPAREN STR RPAREN SEMI",
 "expr : term PLUS term",
 "expr : term MINUS term",
 "expr : term",
 "term : factor MULTIPLY factor",
 "term : factor DIVISION factor",
 "term : factor",
+"factor : ID",
 "factor : INT",
 "factor : LONG",
 "factor : PLUS factor",
 "factor : MINUS factor",
+"factor : ITOL LPAREN expr RPAREN",
 };
 
-//#line 98 "grammar.y"
+//#line 177 "grammar.y"
 
 protected Lexer lexer;
 
@@ -317,21 +376,27 @@ public Parser(Lexer lexer) {
 	this(lexer, false);
 }
 
+protected void debugRule() {
+	System.out.println(" => RULE        " + this.yyrule[this.yyn]);
+}
+
 protected void yyerror(String s) throws SyntaxException {
 	throw new SyntaxException(this.currentToken, this.lexer.fileName(), s);
 }
 
 protected int yylex() throws IOException, LexicalException {
 	this.currentToken = this.lexer.getNextToken();
+	System.out.println("");
+	System.out.println("Current token: " + this.currentToken);
 	String value = this.currentToken.getValue();
-	this.yylval = (value == null) ? null : new ParserVal(value);
+	this.yylval = new ParserVal(value);
 	return this.currentToken.getType().code();
 }
 
 public void parse() throws IOException, LexicalException, SyntaxException {
 	this.yyparse();
 }
-//#line 262 "Parser.java"
+//#line 327 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -374,29 +439,29 @@ boolean doaction;
   while (true) //until parsing is done, either correctly, or w/error
     {
     doaction=true;
-    if (yydebug) debug("loop"); 
+    //if (yydebug) debug("loop"); 
     //#### NEXT ACTION (from reduction table)
     for (yyn=yydefred[yystate];yyn==0;yyn=yydefred[yystate])
       {
-      if (yydebug) debug("yyn:"+yyn+"  state:"+yystate+"  yychar:"+yychar);
+      //if (yydebug) debug("yyn:"+yyn+"  state:"+yystate+"  yychar:"+yychar);
       if (yychar < 0)      //we want a char?
         {
         yychar = yylex();  //get next token
-        if (yydebug) debug(" next yychar:"+yychar);
+        //if (yydebug) debug(" next yychar:"+yychar);
         //#### ERROR CHECK ####
         if (yychar < 0)    //it it didn't work/error
           {
           yychar = 0;      //change it to default string (no -1!)
-          if (yydebug)
-            yylexdebug(yystate,yychar);
+          //if (yydebug)
+          //  yylexdebug(yystate,yychar);
           }
         }//yychar<0
       yyn = yysindex[yystate];  //get amount to shift by (shift index)
       if ((yyn != 0) && (yyn += yychar) >= 0 &&
           yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
         {
-        if (yydebug)
-          debug("state "+yystate+", shifting to state "+yytable[yyn]);
+        //if (yydebug)
+          //debug("state "+yystate+", shifting to state "+yytable[yyn]);
         //#### NEXT STATE ####
         yystate = yytable[yyn];//we are in a new state
         state_push(yystate);   //save it
@@ -412,7 +477,7 @@ boolean doaction;
     if ((yyn !=0 ) && (yyn += yychar) >= 0 &&
             yyn <= YYTABLESIZE && yycheck[yyn] == yychar)
       {   //we reduced!
-      if (yydebug) debug("reduce");
+      //if (yydebug) debug("reduce");
       yyn = yytable[yyn];
       doaction=true; //get ready to execute
       break;         //drop down to actions
@@ -438,8 +503,8 @@ boolean doaction;
           if ((yyn != 0) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
-            if (yydebug)
-              debug("state "+state_peek(0)+", error recovery shifting to state "+yytable[yyn]+" ");
+            //if (yydebug)
+              //debug("state "+state_peek(0)+", error recovery shifting to state "+yytable[yyn]+" ");
             yystate = yytable[yyn];
             state_push(yystate);
             val_push(yylval);
@@ -448,8 +513,8 @@ boolean doaction;
             }
           else
             {
-            if (yydebug)
-              debug("error recovery discarding state "+state_peek(0)+" ");
+            //if (yydebug)
+              //debug("error recovery discarding state "+state_peek(0)+" ");
             if (stateptr<0)   //check for under & overflow here
               {
               yyerror("Stack underflow. aborting...");  //capital 'S'
@@ -464,13 +529,13 @@ boolean doaction;
         {
         if (yychar == 0)
           return 1; //yyabort
-        if (yydebug)
-          {
-          yys = null;
-          if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
-          if (yys == null) yys = "illegal-symbol";
-          debug("state "+yystate+", error recovery discards token "+yychar+" ("+yys+")");
-          }
+        //if (yydebug)
+          //{
+          //yys = null;
+          //if (yychar <= YYMAXTOKEN) yys = yyname[yychar];
+          //if (yys == null) yys = "illegal-symbol";
+          //debug("state "+yystate+", error recovery discards token "+yychar+" ("+yys+")");
+          //}
         yychar = -1;  //read another
         }
       }//end error recovery
@@ -478,8 +543,8 @@ boolean doaction;
     if (!doaction)   //any reason not to proceed?
       continue;      //skip action
     yym = yylen[yyn];          //get count of terminals on rhs
-    if (yydebug)
-      debug("state "+yystate+", reducing "+yym+" by rule "+yyn+" ("+yyrule[yyn]+")");
+    //if (yydebug)
+      //debug("state "+yystate+", reducing "+yym+" by rule "+yyn+" ("+yyrule[yyn]+")");
     if (yym>0)                 //if count of rhs not 'nil'
       yyval = val_peek(yym-1); //get current semantic value
     yyval = dup_yyval(yyval); //duplicate yyval if ParserVal is used as semantic value
@@ -487,101 +552,193 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 1:
-//#line 55 "grammar.y"
-{ System.out.println("scope"); }
+//#line 63 "grammar.y"
+{ this.debugRule(); }
 break;
 case 2:
-//#line 58 "grammar.y"
-{ System.out.println("scope"); }
+//#line 66 "grammar.y"
+{ this.debugRule(); }
+break;
+case 3:
+//#line 69 "grammar.y"
+{ this.debugRule(); }
 break;
 case 4:
-//#line 62 "grammar.y"
-{ System.out.println("statement statement_list"); }
+//#line 70 "grammar.y"
+{ this.debugRule(); }
 break;
 case 5:
-//#line 65 "grammar.y"
-{ System.out.println("SEMI"); }
+//#line 73 "grammar.y"
+{ this.debugRule(); }
 break;
 case 6:
-//#line 66 "grammar.y"
-{ System.out.println("scope"); }
+//#line 74 "grammar.y"
+{ this.debugRule(); }
 break;
 case 7:
-//#line 67 "grammar.y"
-{ System.out.println("var_declaration"); }
-break;
-case 8:
-//#line 69 "grammar.y"
-{ System.out.println("expr SEMI"); }
-break;
-case 9:
-//#line 72 "grammar.y"
-{ System.out.println("TYPE_INT var_list"); }
+//#line 75 "grammar.y"
+{ this.debugRule(); }
 break;
 case 10:
-//#line 73 "grammar.y"
-{ System.out.println("TYPE_LONG var_list"); }
+//#line 90 "grammar.y"
+{ this.debugRule(); }
 break;
 case 11:
-//#line 76 "grammar.y"
-{ System.out.println("ID"); }
+//#line 91 "grammar.y"
+{ this.debugRule(); }
 break;
 case 12:
-//#line 77 "grammar.y"
-{ System.out.println("ID COMMA var_list"); }
+//#line 104 "grammar.y"
+{ this.debugRule(); }
 break;
 case 13:
-//#line 82 "grammar.y"
-{ System.out.println("term PLUS term"); }
+//#line 105 "grammar.y"
+{ this.debugRule(); }
 break;
 case 14:
-//#line 83 "grammar.y"
-{ System.out.println("term MINUS term"); }
+//#line 108 "grammar.y"
+{ this.debugRule(); }
 break;
 case 15:
-//#line 84 "grammar.y"
-{ System.out.println("term"); }
+//#line 109 "grammar.y"
+{ this.debugRule(); }
 break;
 case 16:
-//#line 87 "grammar.y"
-{ System.out.println("factor MULTIPLY factor"); }
+//#line 112 "grammar.y"
+{ this.debugRule(); }
 break;
 case 17:
-//#line 88 "grammar.y"
-{ System.out.println("factor DIVISION factor"); }
+//#line 113 "grammar.y"
+{ this.debugRule(); }
 break;
 case 18:
-//#line 89 "grammar.y"
-{ System.out.println("factor"); }
+//#line 122 "grammar.y"
+{ this.debugRule(); }
 break;
 case 19:
-//#line 92 "grammar.y"
-{ System.out.println("INT"); }
+//#line 123 "grammar.y"
+{ this.debugRule(); }
 break;
 case 20:
-//#line 93 "grammar.y"
-{ System.out.println("LONG"); }
+//#line 124 "grammar.y"
+{ this.debugRule(); }
 break;
 case 21:
-//#line 94 "grammar.y"
-{ System.out.println("PLUS factor"); }
+//#line 125 "grammar.y"
+{ this.debugRule(); }
 break;
 case 22:
-//#line 95 "grammar.y"
-{ System.out.println("MINUS factor"); }
+//#line 126 "grammar.y"
+{ this.debugRule(); }
 break;
-//#line 495 "Parser.java"
+case 23:
+//#line 129 "grammar.y"
+{ this.debugRule(); }
+break;
+case 24:
+//#line 130 "grammar.y"
+{ this.debugRule(); }
+break;
+case 25:
+//#line 133 "grammar.y"
+{ this.debugRule(); }
+break;
+case 26:
+//#line 136 "grammar.y"
+{ this.debugRule(); }
+break;
+case 27:
+//#line 139 "grammar.y"
+{ this.debugRule(); }
+break;
+case 28:
+//#line 140 "grammar.y"
+{ this.debugRule(); }
+break;
+case 29:
+//#line 141 "grammar.y"
+{ this.debugRule(); }
+break;
+case 30:
+//#line 142 "grammar.y"
+{ this.debugRule(); }
+break;
+case 31:
+//#line 143 "grammar.y"
+{ this.debugRule(); }
+break;
+case 32:
+//#line 144 "grammar.y"
+{ this.debugRule(); }
+break;
+case 33:
+//#line 147 "grammar.y"
+{ this.debugRule(); }
+break;
+case 34:
+//#line 150 "grammar.y"
+{ this.debugRule(); }
+break;
+case 35:
+//#line 159 "grammar.y"
+{ this.debugRule(); }
+break;
+case 36:
+//#line 160 "grammar.y"
+{ this.debugRule(); }
+break;
+case 37:
+//#line 161 "grammar.y"
+{ this.debugRule(); }
+break;
+case 38:
+//#line 164 "grammar.y"
+{ this.debugRule(); }
+break;
+case 39:
+//#line 165 "grammar.y"
+{ this.debugRule(); }
+break;
+case 40:
+//#line 166 "grammar.y"
+{ this.debugRule(); }
+break;
+case 41:
+//#line 169 "grammar.y"
+{ this.debugRule(); }
+break;
+case 42:
+//#line 170 "grammar.y"
+{ this.debugRule(); }
+break;
+case 43:
+//#line 171 "grammar.y"
+{ this.debugRule(); }
+break;
+case 44:
+//#line 172 "grammar.y"
+{ this.debugRule(); }
+break;
+case 45:
+//#line 173 "grammar.y"
+{ this.debugRule(); }
+break;
+case 46:
+//#line 174 "grammar.y"
+{ this.debugRule(); }
+break;
+//#line 652 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
-    if (yydebug) debug("reduce");
+    //if (yydebug) debug("reduce");
     state_drop(yym);             //we just reduced yylen states
     yystate = state_peek(0);     //get new state
     val_drop(yym);               //corresponding value drop
     yym = yylhs[yyn];            //select next TERMINAL(on lhs)
     if (yystate == 0 && yym == 0)//done? 'rest' state and at first TERMINAL
       {
-      if (yydebug) debug("After reduction, shifting from state 0 to state "+YYFINAL+"");
+      //if (yydebug) debug("After reduction, shifting from state 0 to state "+YYFINAL+"");
       yystate = YYFINAL;         //explicitly say we're done
       state_push(YYFINAL);       //and save it
       val_push(yyval);           //also save the semantic value of parsing
@@ -589,8 +746,8 @@ break;
         {
         yychar = yylex();        //get next character
         if (yychar<0) yychar=0;  //clean, if necessary
-        if (yydebug)
-          yylexdebug(yystate,yychar);
+        //if (yydebug)
+          //yylexdebug(yystate,yychar);
         }
       if (yychar == 0)          //Good exit (if lex returns 0 ;-)
          break;                 //quit the loop--all DONE
@@ -603,7 +760,7 @@ break;
         yystate = yytable[yyn]; //get new state
       else
         yystate = yydgoto[yym]; //else go to new defred
-      if (yydebug) debug("after reduction, shifting from state "+state_peek(0)+" to state "+yystate+"");
+      //if (yydebug) debug("after reduction, shifting from state "+state_peek(0)+" to state "+yystate+"");
       state_push(yystate);     //going again, so push state & val...
       val_push(yyval);         //for next action
       }

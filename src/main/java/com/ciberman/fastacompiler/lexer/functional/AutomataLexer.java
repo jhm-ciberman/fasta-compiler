@@ -1,4 +1,4 @@
-package com.ciberman.fastacompiler.lexer;
+package com.ciberman.fastacompiler.lexer.functional;
 
 import com.ciberman.fastacompiler.ConsoleErrorHandler;
 import com.ciberman.fastacompiler.ErrorHandler;
@@ -7,7 +7,9 @@ import com.ciberman.fastacompiler.SymbolTable;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
-import com.ciberman.fastacompiler.lexer.states.*;
+import com.ciberman.fastacompiler.lexer.Lexer;
+import com.ciberman.fastacompiler.lexer.LexerContext;
+import com.ciberman.fastacompiler.lexer.Token;
 
 import java.io.*;
 
@@ -142,7 +144,6 @@ public class AutomataLexer implements Lexer, LexerContext {
             int codePoint = this.readNextCodePoint();
 
             try {
-
                 // Handle current state
                 currentState = currentState.handle(codePoint, this);
 
@@ -165,8 +166,8 @@ public class AutomataLexer implements Lexer, LexerContext {
     }
 
     private int readNextCodePoint() throws IOException {
-        this.currentCodePoint = this.reader.read();
         this.reader.mark(1);
+        this.currentCodePoint = this.reader.read();
 
         if (this.currentCodePoint == '\n') {
             this.lineNumber++;

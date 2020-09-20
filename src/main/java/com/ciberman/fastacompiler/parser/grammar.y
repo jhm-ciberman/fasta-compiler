@@ -48,51 +48,130 @@ import java.io.IOException;
 %token UNTIL
 %token ITOL
 
-
+%start program
 %%
 
+/**
+ * ----------------------------------------------------------------
+ * Scopes
+ * ----------------------------------------------------------------
+ * Scopes can contain regular statements or another scope.
+ * The main program is also a scope.
+ */
+
 program
-	: scope                             { System.out.println("scope"); }
+	: scope                            { this.debugRule(); }
 
 scope
-	: ID LBRACE statement_list RBRACE   { System.out.println("scope"); }
+	: ID LBRACE scope_body RBRACE      { this.debugRule(); }
 
-statement_list
-	: statement
-	| statement statement_list          { System.out.println("statement statement_list"); }
+scope_body
+	: var_declaration_list scope_statement_list        { this.debugRule(); }
+	| scope_statement_list                             { this.debugRule(); }
 
-statement
-	: SEMI                              { System.out.println("SEMI"); }
-	| scope                             { System.out.println("scope"); }
-	| var_declaration                   { System.out.println("var_declaration"); }
-// 	| if_statement                      { System.out.println("if_statement"); }
-	| expr SEMI                         { System.out.println("expr SEMI"); }
+scope_statement_list
+	: statement                        { this.debugRule(); }
+	| statement scope_statement_list   { this.debugRule(); }
+	| scope scope_statement_list       { this.debugRule(); }
+
+
+/**
+ * ----------------------------------------------------------------
+ * Blocks
+ * ----------------------------------------------------------------
+ * Blocks cannot contain scopes. Only regular statements
+ */
+
+block
+	: BEGIN block_statement_list END
+	| statement
+
+block_statement_list
+	: statement                          { this.debugRule(); }
+	| statement block_statement_list     { this.debugRule(); }
+
+/**
+ * ----------------------------------------------------------------
+ * Variable declaration
+ * ----------------------------------------------------------------
+ * Variable declarations are only allowd at the begining
+ * of a scope. Declarations must have a type (INT/LONG) followed
+ * by a comma separated list of identifiers.
+ *
+ */
+
+var_declaration_list
+	: var_declaration                       { this.debugRule(); }
+	| var_declaration var_declaration_list  { this.debugRule(); }
 
 var_declaration
-	: TYPE_INT var_list                 { System.out.println("TYPE_INT var_list"); }
-	| TYPE_LONG var_list                { System.out.println("TYPE_LONG var_list"); }
+	: TYPE_INT var_list SEMI                { this.debugRule(); }
+	| TYPE_LONG var_list SEMI               { this.debugRule(); }
 
 var_list
-	: ID                                { System.out.println("ID"); }
-	| ID COMMA var_list                 { System.out.println("ID COMMA var_list"); }
+	: ID                                    { this.debugRule(); }
+	| ID COMMA var_list                     { this.debugRule(); }
 
+/**
+ * ----------------------------------------------------------------
+ * Executable statements
+ * ----------------------------------------------------------------
+ */
 
+statement
+	: SEMI                              { this.debugRule(); }
+	| if_statement                      { this.debugRule(); }
+        | loop_statement                    { this.debugRule(); }
+        | print_statement                   { this.debugRule(); }
+        | assign_statement                  { this.debugRule(); }
+
+if_statement
+	: IF relational_expr THEN block ENDIF             { this.debugRule(); }
+	| IF relational_expr THEN block ELSE block ENDIF  { this.debugRule(); }
+
+loop_statement
+	: LOOP block UNTIL relational_expr                { this.debugRule(); }
+
+relational_expr
+	:  LPAREN expr relational_operator expr RPAREN    { this.debugRule(); }
+
+relational_operator
+	: GTE                               { this.debugRule(); }
+	| LTE                               { this.debugRule(); }
+	| LT                                { this.debugRule(); }
+	| GT                                { this.debugRule(); }
+	| EQ                                { this.debugRule(); }
+	| NOTEQ                             { this.debugRule(); }
+
+assign_statement
+	: ID ASSIGN expr SEMI               { this.debugRule(); }
+
+print_statement
+	: PRINT LPAREN STR RPAREN SEMI      { this.debugRule(); }
+
+/**
+ * ----------------------------------------------------------------
+ * Expression
+ * ----------------------------------------------------------------
+ */
 
 expr
-	: term PLUS term                    { System.out.println("term PLUS term"); }
-	| term MINUS term                   { System.out.println("term MINUS term"); }
-	| term                              { System.out.println("term"); }
+	: term PLUS term                    { this.debugRule(); }
+	| term MINUS term                   { this.debugRule(); }
+	| term                              { this.debugRule(); }
 
 term
-	: factor MULTIPLY factor            { System.out.println("factor MULTIPLY factor"); }
-	| factor DIVISION factor            { System.out.println("factor DIVISION factor"); }
-	| factor                            { System.out.println("factor"); }
+	: factor MULTIPLY factor            { this.debugRule(); }
+	| factor DIVISION factor            { this.debugRule(); }
+	| factor                            { this.debugRule(); }
 
 factor
-	: INT                               { System.out.println("INT"); }
-	| LONG                              { System.out.println("LONG"); }
-	| PLUS factor                       { System.out.println("PLUS factor"); }
-	| MINUS factor                      { System.out.println("MINUS factor"); }
+	: ID                                { this.debugRule(); }
+	| INT                               { this.debugRule(); }
+	| LONG                              { this.debugRule(); }
+	| PLUS factor                       { this.debugRule(); }
+	| MINUS factor                      { this.debugRule(); }
+	| ITOL LPAREN expr RPAREN           { this.debugRule(); }
 
 %%
 
@@ -109,14 +188,20 @@ public Parser(Lexer lexer) {
 	this(lexer, false);
 }
 
+protected void debugRule() {
+	System.out.println(" => RULE        " + this.yyrule[this.yyn]);
+}
+
 protected void yyerror(String s) throws SyntaxException {
 	throw new SyntaxException(this.currentToken, this.lexer.fileName(), s);
 }
 
 protected int yylex() throws IOException, LexicalException {
 	this.currentToken = this.lexer.getNextToken();
+	System.out.println("");
+	System.out.println("Current token: " + this.currentToken);
 	String value = this.currentToken.getValue();
-	this.yylval = (value == null) ? null : new ParserVal(value);
+	this.yylval = new ParserVal(value);
 	return this.currentToken.getType().code();
 }
 

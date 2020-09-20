@@ -1,4 +1,4 @@
-package com.ciberman.fastacompiler.lexer.states;
+package com.ciberman.fastacompiler.lexer.functional;
 
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.lexer.LexerContext;
@@ -9,7 +9,7 @@ public class State10 implements State {
     @Override
     public State handle(int codePoint, LexerContext ctx) throws LexicalException {
        if (Character.isUpperCase(codePoint)) {
-            return ctx.save().andGoToState(10);
+        return ctx.save().andGoToState(10);
         }
 
         TokenType type;
@@ -53,6 +53,7 @@ public class State10 implements State {
             default:
                 throw new LexicalException(ctx, "Invalid keyword \"" + ctx.value() + "\".");
         }
+
 
         return ctx.peek().andYieldToken(new Token(ctx, type));
     }

@@ -17,17 +17,18 @@ public abstract class FastaException extends Exception {
 
     public String toString() {
         StringBuilder s = new StringBuilder();
+
+        switch (this.getLevel()) {
+            case ERROR: s.append("ERROR "); break;
+            case WARN:  s.append("WARN ");  break;
+        }
+
         s.append(this.getFileName())
-                .append("[")
+                .append(" (Line ")
                 .append(this.getLine())
                 .append(":")
                 .append(this.getCol())
-                .append("] ");
-
-        switch (this.getLevel()) {
-            case ERROR: s.append("ERROR"); break;
-            case WARN:  s.append("WARN");  break;
-        }
+                .append(")");
 
         String m = this.getMessage();
         if (! m.isBlank()) {

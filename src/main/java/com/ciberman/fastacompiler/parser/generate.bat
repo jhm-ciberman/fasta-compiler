@@ -1,12 +1,14 @@
 @echo off
 
 IF EXIST yacc.err del yacc.err
+IF EXIST y.output del y.output
 
-yacc.exe -J ^
+yacc.exe -v -J^
     -Jpackage=com.ciberman.fastacompiler.parser ^
     -Jthrows="IOException, LexicalException, SyntaxException" ^
     -Jnoconstruct ^
     -Jnorun ^
+    -Jnodebug ^
     grammar.y 2> yacc.err
 
 set yaccexitcode=%ERRORLEVEL%

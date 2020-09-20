@@ -3,7 +3,7 @@ package com.ciberman.fastacompiler;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
-import com.ciberman.fastacompiler.lexer.AutomataLexer;
+import com.ciberman.fastacompiler.lexer.functional.AutomataLexer;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.parser.Parser;
 
@@ -14,7 +14,6 @@ import java.io.InputStream;
 public class Main {
 
     public static void main(String[] args) throws IOException, FastaException {
-
         Lexer lexer;
         if (args.length > 0) {
             lexer = new AutomataLexer(new FileInputStream(args[0]), args[0]);
@@ -24,7 +23,7 @@ public class Main {
             lexer = new AutomataLexer(stream, name);
         }
 
-        Parser parser = new Parser(lexer);
+        Parser parser = new Parser(lexer, false);
         try {
             parser.parse();
         } catch (LexicalException exception) {
@@ -32,22 +31,6 @@ public class Main {
         } catch (SyntaxException e) {
             e.printStackTrace();
         }
-
-        /*
-        try {
-            Token token = lexer.getNextToken();
-
-
-            while (token.getType() != TokenType.EOF) {
-                System.out.println(token);
-
-                token = lexer.getNextToken();
-            }
-
-        } catch (LexicalException e) {
-            e.printStackTrace();
-        }
-         */
 
         SymbolTable symbolTable = lexer.getSymbolTable();
         System.out.println("=> Symbol Table: ");
