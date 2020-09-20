@@ -2,7 +2,6 @@ package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
-import com.ciberman.fastacompiler.lexer.functional.State;
 
 public interface LexerContext {
 
@@ -19,34 +18,22 @@ public interface LexerContext {
     LexerContext peek();
 
     /**
-     * Returns the state with the specified state number
-     * @param stateNumber The state number (zero is the starting state)
-     * @return The specified state
-     */
-    State goToState(int stateNumber);
-
-    /**
-     * @see #goToState
-     */
-    State andGoToState(int stateNumber);
-
-    /**
      * Yields the passed token and returns the finish state
      * @param token The token to yield
-     * @return The finish state
      */
-    State yieldToken(Token token);
-
-    /**
-     * @see #yieldToken
-     */
-    State andYieldToken(Token token);
+    void yieldToken(Token token);
 
     /**
      *
      * @return The current value in the temp buffer
      */
     String value();
+
+    /**
+     * Overrides the value stored in the temp buffer
+     * @param value The value to override in the temp buffer
+     */
+    void setValue(String value);
 
     /**
      * @return The current line number
