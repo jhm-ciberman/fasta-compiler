@@ -168,6 +168,7 @@ public class MatrixAutomata implements Automata {
             case '\t':
             case '\u000B':
                 return MatrixCol.TAB;
+            case ' ':
             case Character.SPACE_SEPARATOR:
             case Character.LINE_SEPARATOR:
             case Character.PARAGRAPH_SEPARATOR:

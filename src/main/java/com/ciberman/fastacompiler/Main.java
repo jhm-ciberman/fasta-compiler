@@ -4,8 +4,8 @@ import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
 import com.ciberman.fastacompiler.lexer.Automata;
-import com.ciberman.fastacompiler.lexer.FunctionalAutomata;
 import com.ciberman.fastacompiler.lexer.Lexer;
+import com.ciberman.fastacompiler.lexer.MatrixAutomata;
 import com.ciberman.fastacompiler.parser.Parser;
 
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException, FastaException {
 
-        Automata automata = new FunctionalAutomata();
+        Automata automata = new MatrixAutomata();
 
         Lexer lexer;
         if (args.length > 0) {

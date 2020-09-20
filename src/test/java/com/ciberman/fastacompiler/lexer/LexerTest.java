@@ -214,6 +214,12 @@ class LexerTest {
 
     @ParameterizedTest
     @MethodSource("getAutomata")
+    void shouldSkipSpaces(TestAutomata automata) throws IOException, LexicalException {
+        automata.assertToken("     \t   \t  INT", TokenType.TYPE_INT);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getAutomata")
     void shouldParseParensInPrintStatements(TestAutomata automata) throws IOException, LexicalException {
         Lexer lexer = automata.makeLexer("PRINT('my string');");
         Assertions.assertEquals(TokenType.PRINT, lexer.getNextToken().getType());
