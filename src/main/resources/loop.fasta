@@ -1,0 +1,17 @@
+loop {
+    INT a, b, c;
+
+    a = 100_i;
+    b = 200_i;
+    c = 2_i;
+
+    LOOP
+        c = c + ITOL(a * b);
+    UNTIL (c > 100000_l)
+
+    LOOP
+        BEGIN
+        c = c + ITOL(a * b);
+        END
+    UNTIL (c > 100000_l)
+}

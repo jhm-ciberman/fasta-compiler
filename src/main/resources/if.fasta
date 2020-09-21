@@ -1,0 +1,31 @@
+if {
+    INT a, b;
+    a = 5_i;
+
+    IF (a <= 2_i) THEN
+        a = a + 2_l;
+    ENDIF
+
+    IF (a > 200_i) THEN
+        a = a + 2_l;
+    ELSE
+        a = a - 100_l;
+    ENDIF
+
+    IF (a <> 12_i + 100_i / 2_i) THEN
+        a = a + a + a + a * a / a;
+    ENDIF
+
+    IF (a <> 12_i + 100_i / 2_i) THEN
+        IF (a <> 10_i + a - a) THEN
+            BEGIN
+            a = a + a + a + a * a / a;
+            END
+        ELSE
+            IF (a < 12_i) THEN
+                PRINT('A')
+            ENDIF
+        ENDIF
+    ENDIF
+
+}

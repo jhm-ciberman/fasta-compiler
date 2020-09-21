@@ -49,8 +49,12 @@ sourceSets {
 }
 
 dependencies {
-    implementation('com.intellij:annotations:+@jar')
-    testImplementation('org.junit.jupiter:junit-jupiter:5.6.2')
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    compile group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
+
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 

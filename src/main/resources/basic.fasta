@@ -2,7 +2,7 @@ myprogram {
     INT a, b;
     LONG c;
 
-    b = 3_i;
+    b = -3_i;
 
     PRINT('Hello world');
 

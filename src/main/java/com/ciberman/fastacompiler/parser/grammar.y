@@ -116,6 +116,12 @@ var_list
  * ----------------------------------------------------------------
  * Executable statements
  * ----------------------------------------------------------------
+ * IF..THEN, IF..THEN..ELSE and LOOP..WHILE are all considered
+ * executable constrol statements. Control statements cannot have
+ * scopes inside, that's why they use the special non-terminal
+ * "scope".
+ *
+ * Print and assignments are also considered executable statements.
  */
 
 statement
@@ -128,9 +134,17 @@ statement
 if_statement
 	: IF relational_expr THEN block ENDIF             { this.debugRule(); }
 	| IF relational_expr THEN block ELSE block ENDIF  { this.debugRule(); }
+	// Error handling:
+	| IF expr                                         { this.yyerror("IF condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: IF (foo <= bar) THEN ..."); }
+	| IF LPAREN expr relational_operator expr THEN    { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: IF (foo <= bar) THEN ..."); }
+	| IF LPAREN expr RPAREN                           { this.yyerror("IF does not have relational operator. You should add a valid relational operator. Example: IF (foo <= bar) THEN ..."); }
 
 loop_statement
 	: LOOP block UNTIL relational_expr                { this.debugRule(); }
+	// Error handling:
+	| LOOP block UNTIL expr                                         { this.yyerror("LOOP..WHILE condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: LOOP .. WHILE (foo <= bar)"); }
+	| LOOP block UNTIL LPAREN expr relational_operator expr THEN    { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: LOOP .. WHILE (foo <= bar)"); }
+	| LOOP block UNTIL LPAREN expr RPAREN                           { this.yyerror("LOOP..WHILE condition does not have relational operator. You should add a valid relational operator. Example: LOOP .. WHILE (foo <= bar)"); }
 
 relational_expr
 	:  LPAREN expr relational_operator expr RPAREN    { this.debugRule(); }

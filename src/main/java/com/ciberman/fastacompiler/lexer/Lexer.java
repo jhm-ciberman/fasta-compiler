@@ -21,10 +21,14 @@ public class Lexer implements LexerContext {
     private Token token = null;
 
     private final String fileName;
+
     private int lineNumber = 1;
+
     private int colNumber = 0;
 
     private int currentCodePoint;
+
+    private boolean ignoreSubsequentErrors;
 
     public ErrorHandler errorHandler = new ConsoleErrorHandler();
 
@@ -107,16 +111,23 @@ public class Lexer implements LexerContext {
     }
 
     /**
+     * Resets the lexer to the initial state.
+     */
+    private void reset() {
+        this.automata.reset();
+        this.currentValue.setLength(0); // Clear the string builder. It's faster than allocating a new one
+        this.token = null;
+    }
+
+    /**
      * Returns the next token in the input stream
      * @return THe token
      * @throws IOException If some IO operation has an error
      */
     public Token getNextToken() throws IOException, LexicalException {
 
-        this.automata.reset();
-
-        this.currentValue.setLength(0); // Clear the string builder. It's faster than allocating a new one
-        this.token = null;
+        this.reset();
+        this.ignoreSubsequentErrors = false;
 
         while (this.token == null) {
 
@@ -127,16 +138,27 @@ public class Lexer implements LexerContext {
                 this.automata.advance(codePoint, this);
 
             } catch (LexicalException exception) {
-                if (exception.getLevel() == FastaException.ErrorLevel.ERROR) {
-                    this.errorHandler.error(exception);
-                    throw exception; // Rethrow critical exception!
-                } else {
-                    this.errorHandler.warn(exception);
-                }
+                this.handleError(exception);
             }
         }
 
         return this.token;
+    }
+
+    private void handleError(LexicalException exception) {
+        if (exception.getLevel() == FastaException.ErrorLevel.ERROR) {
+            if (! this.ignoreSubsequentErrors) {
+                // Report error to the error handler
+                this.errorHandler.error(exception);
+
+                // Try to recover
+                this.reset();
+
+                this.ignoreSubsequentErrors = true;
+            }
+        } else {
+            this.errorHandler.warn(exception);
+        }
     }
 
     /**
@@ -146,6 +168,12 @@ public class Lexer implements LexerContext {
         return this.symbolTable;
     }
 
+    /**
+     * Reads the next unicode code point in the input stream and update the line
+     * and column number.
+     * @return The read code point or -1 if end of file
+     * @throws IOException In case of an IO problem
+     */
     private int readNextCodePoint() throws IOException {
         this.reader.mark(1);
         this.currentCodePoint = this.reader.read();
