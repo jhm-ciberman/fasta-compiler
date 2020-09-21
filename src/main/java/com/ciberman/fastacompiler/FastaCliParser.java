@@ -27,7 +27,7 @@ public class FastaCliParser {
         lexerOption.setRequired(false);
         this.options.addOption(lexerOption);
 
-        Option demoOption = new Option("d", "demo", true, "Loads a built-in demo file. Values: \"basic\", \"factorial\".");
+        Option demoOption = new Option("d", "demo", true, "Loads a built-in demo file. Values: \"99bottles\", \"basic\", \"factorial\", \"if\", \"loop\", \"syntax\", \"vars\".");
         demoOption.setRequired(false);
         this.options.addOption(demoOption);
 
@@ -66,7 +66,7 @@ public class FastaCliParser {
 
     private void printHelpAndExit() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("fastacompiler [options] inputfile", this.options);
+        formatter.printHelp("fasta-compiler [options] inputfile", this.options);
         System.exit(1);
     }
 

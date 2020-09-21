@@ -7,8 +7,33 @@ A design document for the lexer can be found here: (Spanish)
 
 The default input file is located under `src/main/resources/test.fasta` 
 
+## Usage
+Dowload the latest release from the [Releases section](https://github.com/jhm-ciberman/fasta-compiler/releases/)
+then unzip the zip/tar file and run:
 
-## Build and run
+Windows:
+```
+./bin/fasta-compiler.bat <filename>
+```
+Linux/MacOS:
+```
+./bin/fasta-compiler <filename>
+```
+You can pass any text file as an argument.
+
+Additionally you can pass the following arguments: 
+
+```
+usage: fasta-compiler [options] inputfile
+ -d,--demo <arg>    Loads a built-in demo file. Values: "99bottles", "basic",
+                    "factorial", "if", "loop", "syntax", "vars".
+ -l,--lexer <arg>   Select the lexer implementation. Values: "functional",
+                    "matrix". (Default is "matrix")
+```
+
+
+
+## Build and run from source
 
 This project uses Gradle. To build and run use:
 

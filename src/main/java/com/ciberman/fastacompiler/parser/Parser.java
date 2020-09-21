@@ -386,7 +386,7 @@ final static String yyrule[] = {
 "factor : ITOL LPAREN expr RPAREN",
 };
 
-//#line 185 "grammar.y"
+//#line 191 "grammar.y"
 
 protected Lexer lexer;
 
@@ -637,143 +637,143 @@ case 17:
 { this.debugRule(); }
 break;
 case 18:
-//#line 122 "grammar.y"
+//#line 128 "grammar.y"
 { this.debugRule(); }
 break;
 case 19:
-//#line 123 "grammar.y"
-{ this.debugRule(); }
-break;
-case 20:
-//#line 124 "grammar.y"
-{ this.debugRule(); }
-break;
-case 21:
-//#line 125 "grammar.y"
-{ this.debugRule(); }
-break;
-case 22:
-//#line 126 "grammar.y"
-{ this.debugRule(); }
-break;
-case 23:
 //#line 129 "grammar.y"
 { this.debugRule(); }
 break;
-case 24:
+case 20:
 //#line 130 "grammar.y"
 { this.debugRule(); }
 break;
-case 25:
+case 21:
+//#line 131 "grammar.y"
+{ this.debugRule(); }
+break;
+case 22:
 //#line 132 "grammar.y"
+{ this.debugRule(); }
+break;
+case 23:
+//#line 135 "grammar.y"
+{ this.debugRule(); }
+break;
+case 24:
+//#line 136 "grammar.y"
+{ this.debugRule(); }
+break;
+case 25:
+//#line 138 "grammar.y"
 { this.yyerror("IF condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: IF (foo <= bar) THEN ..."); }
 break;
 case 26:
-//#line 133 "grammar.y"
+//#line 139 "grammar.y"
 { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: IF (foo <= bar) THEN ..."); }
 break;
 case 27:
-//#line 134 "grammar.y"
+//#line 140 "grammar.y"
 { this.yyerror("IF does not have relational operator. You should add a valid relational operator. Example: IF (foo <= bar) THEN ..."); }
 break;
 case 28:
-//#line 137 "grammar.y"
+//#line 143 "grammar.y"
 { this.debugRule(); }
 break;
 case 29:
-//#line 139 "grammar.y"
+//#line 145 "grammar.y"
 { this.yyerror("LOOP..WHILE condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: LOOP .. WHILE (foo <= bar)"); }
 break;
 case 30:
-//#line 140 "grammar.y"
+//#line 146 "grammar.y"
 { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: LOOP .. WHILE (foo <= bar)"); }
 break;
 case 31:
-//#line 141 "grammar.y"
+//#line 147 "grammar.y"
 { this.yyerror("LOOP..WHILE condition does not have relational operator. You should add a valid relational operator. Example: LOOP .. WHILE (foo <= bar)"); }
 break;
 case 32:
-//#line 144 "grammar.y"
-{ this.debugRule(); }
-break;
-case 33:
-//#line 147 "grammar.y"
-{ this.debugRule(); }
-break;
-case 34:
-//#line 148 "grammar.y"
-{ this.debugRule(); }
-break;
-case 35:
-//#line 149 "grammar.y"
-{ this.debugRule(); }
-break;
-case 36:
 //#line 150 "grammar.y"
 { this.debugRule(); }
 break;
-case 37:
-//#line 151 "grammar.y"
+case 33:
+//#line 153 "grammar.y"
 { this.debugRule(); }
 break;
-case 38:
-//#line 152 "grammar.y"
+case 34:
+//#line 154 "grammar.y"
 { this.debugRule(); }
 break;
-case 39:
+case 35:
 //#line 155 "grammar.y"
 { this.debugRule(); }
 break;
-case 40:
+case 36:
+//#line 156 "grammar.y"
+{ this.debugRule(); }
+break;
+case 37:
+//#line 157 "grammar.y"
+{ this.debugRule(); }
+break;
+case 38:
 //#line 158 "grammar.y"
 { this.debugRule(); }
 break;
+case 39:
+//#line 161 "grammar.y"
+{ this.debugRule(); }
+break;
+case 40:
+//#line 164 "grammar.y"
+{ this.debugRule(); }
+break;
 case 41:
-//#line 167 "grammar.y"
-{ this.debugRule(); }
-break;
-case 42:
-//#line 168 "grammar.y"
-{ this.debugRule(); }
-break;
-case 43:
-//#line 169 "grammar.y"
-{ this.debugRule(); }
-break;
-case 44:
-//#line 172 "grammar.y"
-{ this.debugRule(); }
-break;
-case 45:
 //#line 173 "grammar.y"
 { this.debugRule(); }
 break;
-case 46:
+case 42:
 //#line 174 "grammar.y"
 { this.debugRule(); }
 break;
-case 47:
-//#line 177 "grammar.y"
+case 43:
+//#line 175 "grammar.y"
 { this.debugRule(); }
 break;
-case 48:
+case 44:
 //#line 178 "grammar.y"
 { this.debugRule(); }
 break;
-case 49:
+case 45:
 //#line 179 "grammar.y"
 { this.debugRule(); }
 break;
-case 50:
+case 46:
 //#line 180 "grammar.y"
 { this.debugRule(); }
 break;
+case 47:
+//#line 183 "grammar.y"
+{ this.debugRule(); }
+break;
+case 48:
+//#line 184 "grammar.y"
+{ this.debugRule(); }
+break;
+case 49:
+//#line 185 "grammar.y"
+{ this.debugRule(); }
+break;
+case 50:
+//#line 186 "grammar.y"
+{ this.debugRule(); }
+break;
 case 51:
-//#line 181 "grammar.y"
+//#line 187 "grammar.y"
 { this.debugRule(); }
 break;
 case 52:
-//#line 182 "grammar.y"
+//#line 188 "grammar.y"
 { this.debugRule(); }
 break;
 //#line 701 "Parser.java"
