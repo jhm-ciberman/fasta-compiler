@@ -64,13 +64,15 @@ program
 
 scope
 	: ID LBRACE scope_body RBRACE      { this.debugRule(); }
+	| ID LBRACE RBRACE                 { this.debugRule(); }
 
 scope_body
-	: var_declaration_list scope_statement_list        { this.debugRule(); }
-	| scope_statement_list                             { this.debugRule(); }
+	: var_declaration_list scope_statement_list  { this.debugRule(); }
+	| scope_statement_list                       { this.debugRule(); }
 
 scope_statement_list
 	: statement                        { this.debugRule(); }
+	| scope                            { this.debugRule(); }
 	| statement scope_statement_list   { this.debugRule(); }
 	| scope scope_statement_list       { this.debugRule(); }
 
@@ -105,8 +107,8 @@ var_declaration_list
 	| var_declaration var_declaration_list  { this.debugRule(); }
 
 var_declaration
-	: TYPE_INT var_list SEMI                { this.debugRule(); }
-	| TYPE_LONG var_list SEMI               { this.debugRule(); }
+	: TYPE_INT var_list SEMI          { this.debugRule(); }
+	| TYPE_LONG var_list SEMI         { this.debugRule(); }
 
 var_list
 	: ID                                    { this.debugRule(); }
