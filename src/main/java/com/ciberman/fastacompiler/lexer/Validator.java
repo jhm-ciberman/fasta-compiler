@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
+import com.ciberman.fastacompiler.Fasta;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.LexicalWarning;
 
@@ -53,9 +54,8 @@ public class Validator {
         if (value.length() > 20) {
             value = value.substring(0, 20);
             ctx.setValue(value);
-            ctx.warning(new LexicalWarning(ctx, "The identifier name \""+ ctx.value() + "\" is larger than 20 characters. Using \"" + value + "\"."));
+            Fasta.warn(new LexicalWarning(ctx, "The identifier name \""+ ctx.value() + "\" is larger than 20 characters. Using \"" + value + "\"."));
         }
-
 
         return value;
     }

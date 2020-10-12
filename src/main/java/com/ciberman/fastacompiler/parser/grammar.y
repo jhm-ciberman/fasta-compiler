@@ -195,13 +195,16 @@ protected Lexer lexer;
 
 protected Token currentToken;
 
-public Parser(Lexer lexer, boolean debugMode) {
+protected IRBuilder builder;
+
+public Parser(Lexer lexer, IRBuilder irBuilder, boolean debugMode) {
 	this.lexer = lexer;
+	this.builder = irBuilder;
 	this.yydebug = debugMode;
 }
 
-public Parser(Lexer lexer) {
-	this(lexer, false);
+public Parser(Lexer lexer, IRBuilder irBuilder) {
+	this(lexer, irBuilder, false);
 }
 
 protected void debugRule() {

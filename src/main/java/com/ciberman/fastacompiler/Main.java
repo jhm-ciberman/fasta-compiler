@@ -3,15 +3,14 @@ package com.ciberman.fastacompiler;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
+import com.ciberman.fastacompiler.lexer.BasicLexer;
 import com.ciberman.fastacompiler.lexer.Lexer;
+import com.ciberman.fastacompiler.lexer.RecoveryLexer;
 import com.ciberman.fastacompiler.parser.Parser;
 
 import java.io.IOException;
 
 public class Main {
-
-
-
 
     public static void main(String[] args) throws IOException, FastaException {
 
@@ -20,14 +19,13 @@ public class Main {
 
         System.out.println("File: " + input.fileName);
 
-        Lexer lexer = new Lexer(input.automataImpl, input.stream, input.fileName);
-        Parser parser = new Parser(lexer, false);
+        Lexer lexer = new BasicLexer(input.automataImpl, input.stream, input.fileName);
+        lexer = new RecoveryLexer(lexer);
+        Parser parser = new Parser(lexer, null, false);
         try {
             parser.parse();
-        } catch (LexicalException exception) {
+        } catch (LexicalException | SyntaxException exception) {
             exception.printStackTrace();
-        } catch (SyntaxException e) {
-            e.printStackTrace();
         }
 
         SymbolTable symbolTable = lexer.getSymbolTable();

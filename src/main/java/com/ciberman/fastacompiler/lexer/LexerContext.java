@@ -1,7 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.Symbol;
-import com.ciberman.fastacompiler.errors.LexicalWarning;
 
 public interface LexerContext {
 
@@ -49,13 +48,6 @@ public interface LexerContext {
      * @return The current file name
      */
     String fileName();
-
-    /**
-     * Reports a warning
-     * @param warning The warning
-     * @return Itself for fluent chaining
-     */
-    LexerContext warning(LexicalWarning warning);
 
     /**
      * Add symbol to symbol table

@@ -1,0 +1,11 @@
+test
+{
+    INT a;
+    ambito1 {
+        LONG b;
+        PRINT ('casa');
+        ambito2 {
+            PRINT ('casa');
+        }
+    }
+}

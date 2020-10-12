@@ -1,7 +1,1 @@
-test
-{
-    INT a, b, c;
-    ambito1 {
-        ambito2 {}
-    }
-}
+test { ambi{}}

@@ -394,13 +394,16 @@ protected Lexer lexer;
 
 protected Token currentToken;
 
-public Parser(Lexer lexer, boolean debugMode) {
+protected IRBuilder builder;
+
+public Parser(Lexer lexer, IRBuilder irBuilder, boolean debugMode) {
 	this.lexer = lexer;
+	this.builder = irBuilder;
 	this.yydebug = debugMode;
 }
 
-public Parser(Lexer lexer) {
-	this(lexer, false);
+public Parser(Lexer lexer, IRBuilder irBuilder) {
+	this(lexer, irBuilder, false);
 }
 
 protected void debugRule() {
@@ -423,7 +426,7 @@ protected int yylex() throws IOException, LexicalException {
 public void parse() throws IOException, LexicalException, SyntaxException {
 	this.yyparse();
 }
-//#line 354 "Parser.java"
+//#line 357 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -786,7 +789,7 @@ case 54:
 //#line 190 "grammar.y"
 { this.debugRule(); }
 break;
-//#line 711 "Parser.java"
+//#line 714 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
