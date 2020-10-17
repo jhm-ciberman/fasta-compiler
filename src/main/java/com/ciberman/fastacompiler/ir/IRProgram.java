@@ -1,17 +1,18 @@
 package com.ciberman.fastacompiler.ir;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class IRProgram implements Iterable<Inst> {
+public class IRProgram {
 
     private final List<Inst> instList = new ArrayList<>();
 
     private final Set<IntConst> intConsts = new HashSet<>();
     private final Set<LongConst> longConsts = new HashSet<>();
     private final Set<StrConst> strConsts = new HashSet<>();
+
+    private Scope currentScope = null;
 
     private final Map<String, Symbol> symbolMap = new HashMap<>();
 
@@ -26,14 +27,22 @@ public class IRProgram implements Iterable<Inst> {
         return inst;
     }
 
+    public void enterScope(String name) {
+        this.currentScope = new Scope(name, this.currentScope);
+    }
+
+    public void exitScope() {
+        this.currentScope = this.currentScope.getParent();
+    }
+
     /**
      * Adds a symbol to the symbol table.
      * @param name The symbol name
      * @param type The symbol type
      */
     public void declareSymbol(String name, ValueType type) {
-        System.out.println("Declare " + name + " Type " + type);
-        this.symbolMap.put(name, new Symbol(name, type));
+        String scopedName = this.currentScope.getName(name);
+        this.symbolMap.put(scopedName, new Symbol(scopedName, type));
     }
 
     /**
@@ -173,27 +182,38 @@ public class IRProgram implements Iterable<Inst> {
      * @return The symbol, or null if not found
      */
     public @Nullable Symbol findSymbolByName(String name) {
-        return this.symbolMap.get(name);
+        Symbol symbol = null;
+        Scope scope = this.currentScope;
+
+        while ((scope != null) && (symbol = this.symbolMap.get(scope.getName(name))) == null) {
+            scope = scope.getParent();
+        }
+
+        return symbol;
     }
 
-    public @NotNull Iterator<IntConst> intConstIterator() {
-        return this.intConsts.iterator();
+    public int getInstIndex(Inst inst) {
+        return this.instList.indexOf(inst);
     }
 
-    public @NotNull Iterator<LongConst> longConstIterator() {
-        return this.longConsts.iterator();
+    public Iterable<IntConst> intConsts() {
+        return this.intConsts;
     }
 
-    public @NotNull Iterator<StrConst> strConstIterator() {
-        return this.strConsts.iterator();
+    public Iterable<LongConst> longConsts() {
+        return this.longConsts;
     }
 
-    public @NotNull Iterator<Symbol> symbolIterator() {
-        return this.symbolMap.values().iterator();
+    public Iterable<StrConst> strConsts() {
+        return this.strConsts;
     }
 
-    public @NotNull Iterator<Inst> iterator() {
-        return instList.iterator();
+    public Iterable<Symbol> symbols() {
+        return this.symbolMap.values();
+    }
+
+    public Iterable<Inst> instructions() {
+        return instList;
     }
 
 }

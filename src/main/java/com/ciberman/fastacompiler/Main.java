@@ -3,7 +3,7 @@ package com.ciberman.fastacompiler;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
-import com.ciberman.fastacompiler.ir.IRProgram;
+import com.ciberman.fastacompiler.ir.*;
 import com.ciberman.fastacompiler.lexer.BasicLexer;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.RecoveryLexer;
@@ -33,15 +33,8 @@ public class Main {
         IRProgram program = parser.buildProgram();
 
         ConsoleDebugOutput debugOutput = new ConsoleDebugOutput();
-        debugOutput.print(program);
+        debugOutput.printProgram(program);
+        debugOutput.printSymbolTable(program);
 
-        /*
-        SymbolTable symbolTable = lexer.getSymbolTable();
-        System.out.println("=> Symbol Table: ");
-        for (Symbol symbol : symbolTable.all()) {
-            System.out.println(symbol.toString());
-        }
-
-         */
     }
 }

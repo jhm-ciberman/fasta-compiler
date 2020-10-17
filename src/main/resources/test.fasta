@@ -12,6 +12,9 @@ test {
         c = 678910_l;
     ENDIF
 
+    LOOP
+        b = 10_i;
+    UNTIL (a > 10_i)
 
     c = 500_i;
 }

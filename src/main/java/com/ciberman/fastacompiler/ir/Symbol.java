@@ -1,10 +1,11 @@
 package com.ciberman.fastacompiler.ir;
 
-public class Symbol{
+public class Symbol {
 
     private final String name;
 
     private ValueType type; // Change my later!
+
     private Inst lastAssignment;
 
     protected Symbol(String name, ValueType type) {

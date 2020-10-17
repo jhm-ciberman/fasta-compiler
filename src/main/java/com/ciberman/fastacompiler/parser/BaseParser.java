@@ -1,9 +1,6 @@
 package com.ciberman.fastacompiler.parser;
 
-import com.ciberman.fastacompiler.errors.LexicalException;
-import com.ciberman.fastacompiler.errors.SyntaxException;
-import com.ciberman.fastacompiler.errors.UndeclaredVariableException;
-import com.ciberman.fastacompiler.errors.UninitializedVariableException;
+import com.ciberman.fastacompiler.errors.*;
 import com.ciberman.fastacompiler.ir.*;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.Token;
@@ -26,6 +23,7 @@ public class BaseParser {
     private Token currentToken;
 
     private final Stack<BranchInst> branchesStack = new Stack<BranchInst>();
+    private final Stack<Inst> instructionStack = new Stack<Inst>();
 
     public BaseParser(Lexer lexer) {
         this.lexer = lexer;
@@ -34,8 +32,6 @@ public class BaseParser {
 
     protected Token next() throws IOException, LexicalException {
         this.currentToken = this.lexer.getNextToken();
-        System.out.println();
-        System.out.println("Current token: " + this.currentToken);
         return this.currentToken;
     }
 
@@ -88,17 +84,22 @@ public class BaseParser {
         this.declareSymbols((IdList) list.obj, ValueType.LONG);
     }
 
-    protected ParserVal assignOp(ParserVal lhs, ParserVal rhs) throws UndeclaredVariableException {
+    protected ParserVal assignOp(ParserVal lhs, ParserVal tokenAssign, ParserVal rhs) throws UndeclaredVariableException, IncorrectArgumentTypeException {
         Token token = (Token) lhs.obj;
+        Value value = (Value) rhs.obj;
         Symbol symbol = this.theProgram.findSymbolByName(token.getValue());
         if (symbol == null) {
             throw new UndeclaredVariableException(token);
         }
 
-        if (rhs.obj instanceof Inst) {
-            symbol.setLastAssignment((Inst) rhs.obj);
+        if (symbol.getType() != value.getType()) {
+            throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
+        }
+
+        if (value instanceof Inst) {
+            symbol.setLastAssignment((Inst) value);
         } else {
-            AssignInst inst = this.theProgram.createAssignInst((Value) rhs.obj);
+            AssignInst inst = this.theProgram.createAssignInst(value);
             symbol.setLastAssignment(inst);
             return new ParserVal(inst);
         }
@@ -119,35 +120,44 @@ public class BaseParser {
         return new ParserVal(inst);
     }
 
-    protected ParserVal addOp(ParserVal op1, ParserVal op2) {
-        return new ParserVal(this.theProgram.createAddInst((Value) op1.obj, (Value) op2.obj));
+    protected ParserVal addOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
+        this.assertTypes(lhs, token, rhs);
+        return new ParserVal(this.theProgram.createAddInst((Value) lhs.obj, (Value) rhs.obj));
     }
 
-    protected ParserVal subOp(ParserVal op1, ParserVal op2) {
-        return new ParserVal(this.theProgram.createSubInst((Value) op1.obj, (Value) op2.obj));
+    protected ParserVal subOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
+        this.assertTypes(lhs, token, rhs);
+        return new ParserVal(this.theProgram.createSubInst((Value) lhs.obj, (Value) rhs.obj));
     }
 
-    protected ParserVal divOp(ParserVal op1, ParserVal op2) {
-        return new ParserVal(this.theProgram.createDivInst((Value) op1.obj, (Value) op2.obj));
+    protected ParserVal divOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
+        this.assertTypes(lhs, token, rhs);
+        return new ParserVal(this.theProgram.createDivInst((Value) lhs.obj, (Value) rhs.obj));
     }
 
-    protected ParserVal mulOp(ParserVal op1, ParserVal op2) {
-        return new ParserVal(this.theProgram.createMulInst((Value) op1.obj, (Value) op2.obj));
+    protected ParserVal mulOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
+        this.assertTypes(lhs, token, rhs);
+        return new ParserVal(this.theProgram.createMulInst((Value) lhs.obj, (Value) rhs.obj));
     }
 
-    protected ParserVal negOp(ParserVal op) {
+    protected ParserVal negOp(ParserVal op) throws IncorrectArgumentTypeException {
         return new ParserVal(this.theProgram.createNegInst((Value) op.obj));
     }
 
-    protected ParserVal itolOp(ParserVal op) {
-        return new ParserVal(this.theProgram.createItolInst((Value) op.obj));
+    protected ParserVal itolOp(ParserVal tokenItol, ParserVal op) throws SemanticException {
+        Value val = (Value) op.obj;
+        if (val.getType() != ValueType.INT) {
+            throw new SemanticException((Token) tokenItol.obj, "ITOL function requires an INT parameter type. " + val.getType() + " parameter given.");
+        }
+        return new ParserVal(this.theProgram.createItolInst(val));
     }
 
     protected ParserVal printOp(ParserVal op) {
         return new ParserVal(this.theProgram.createPrintInst((StrConst) op.obj));
     }
 
-    protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) throws SyntaxException {
+    protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) throws SyntaxException, IncorrectArgumentTypeException {
+        this.assertTypes(lhs, operator, rhs);
         BranchCondition.RelOperator op = this.getRelOp((Token) operator.obj);
         BranchCondition inst = this.theProgram.createBranchCondition((Value) lhs.obj, op, (Value) rhs.obj);
         return new ParserVal(inst);
@@ -166,20 +176,20 @@ public class BaseParser {
     }
 
     protected void ifCondition(ParserVal test) {
-        BranchInst branchInst = this.theProgram.createBranchInst((BranchCondition) test.obj);
+        BranchCondition condition = (BranchCondition) test.obj;
+        condition.negateOperator();
+        BranchInst branchInst = this.theProgram.createBranchInst();
         this.branchesStack.push(branchInst);
+    }
+
+    protected void loopKeyword() {
+        this.instructionStack.push(this.theProgram.createNoOpInst());
     }
 
     protected void loopCondition(ParserVal test) {
         BranchInst branchInst = this.theProgram.createBranchInst((BranchCondition) test.obj);
-        this.branchesStack.push(branchInst);
+        branchInst.setTarget(this.instructionStack.pop());
     }
-
-
-
-
-
-
 
     protected BranchCondition.RelOperator getRelOp(Token token) throws SyntaxException {
         switch (token.getType()) {
@@ -190,6 +200,23 @@ public class BaseParser {
             case LT:    return BranchCondition.RelOperator.LT;
             case LTE:   return BranchCondition.RelOperator.LTE;
             default: throw new SyntaxException(token, "Expected ==, <=, <, >=, > or <>.");
+        }
+    }
+
+    protected void enterScope(ParserVal name) {
+        this.theProgram.enterScope(this.tokenVal(name));
+    }
+
+    protected void exitScope() {
+        this.theProgram.exitScope();
+    }
+
+    protected void assertTypes(ParserVal lhs, ParserVal operator, ParserVal rhs) throws IncorrectArgumentTypeException {
+        Value op1 = (Value) lhs.obj;
+        Value op2 = (Value) rhs.obj;
+        Token token = (Token) operator.obj;
+        if (op1.getType() != op2.getType()) {
+            throw new IncorrectArgumentTypeException(token, op1.getType(), op2.getType());
         }
     }
 

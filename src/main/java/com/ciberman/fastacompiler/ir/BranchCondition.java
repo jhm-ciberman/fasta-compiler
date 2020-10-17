@@ -5,7 +5,7 @@ public class BranchCondition {
         GT, LT, GTE, LTE, EQ, NOTEQ,
     }
 
-    private final RelOperator operator;
+    private RelOperator operator;
 
     private final Value op1;
 
@@ -14,7 +14,7 @@ public class BranchCondition {
     protected BranchCondition(Value lhs, RelOperator operator, Value rhs) {
         this.op1 = lhs;
         this.op2 = rhs;
-        this.operator = this.negateOperator(operator);
+        this.operator = operator;
     }
 
     public Value getOp1() {
@@ -29,15 +29,14 @@ public class BranchCondition {
         return operator;
     }
 
-    private RelOperator negateOperator(RelOperator operator) {
-        switch (operator) {
-            case GT:    return RelOperator.LTE;
-            case LT:    return RelOperator.GTE;
-            case GTE:   return RelOperator.LT;
-            case LTE:   return RelOperator.GT;
-            case EQ:    return RelOperator.NOTEQ;
-            case NOTEQ: return RelOperator.EQ;
+    public void negateOperator() {
+        switch (this.operator) {
+            case GT:    this.operator = RelOperator.LTE;   break;
+            case LT:    this.operator = RelOperator.GTE;   break;
+            case GTE:   this.operator = RelOperator.LT;    break;
+            case LTE:   this.operator = RelOperator.GT;    break;
+            case EQ:    this.operator = RelOperator.NOTEQ; break;
+            case NOTEQ: this.operator = RelOperator.EQ;    break;
         }
-        return null;
     }
 }

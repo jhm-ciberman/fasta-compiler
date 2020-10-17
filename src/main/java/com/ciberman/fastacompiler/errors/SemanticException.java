@@ -2,7 +2,7 @@ package com.ciberman.fastacompiler.errors;
 
 import com.ciberman.fastacompiler.lexer.Token;
 
-public abstract class SemanticException extends FastaException {
+public class SemanticException extends FastaException {
     protected final Token token;
 
     public SemanticException(Token token, String message) {

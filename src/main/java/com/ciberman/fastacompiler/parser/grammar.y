@@ -61,21 +61,24 @@ import java.io.IOException;
  */
 
 program
-	: scope                            { this.debugRule(); }
+	: scope
 
 scope
-	: ID LBRACE scope_body RBRACE      { this.debugRule(); }
-	| ID LBRACE RBRACE                 { this.debugRule(); }
+	: scope_start scope_body RBRACE      { this.exitScope(); }
+	| scope_start RBRACE                 { this.exitScope(); }
+
+scope_start
+	: ID LBRACE                          { this.enterScope($1); }
 
 scope_body
-	: var_declaration_list scope_statement_list  { this.debugRule(); }
-	| scope_statement_list                       { this.debugRule(); }
+	: var_declaration_list scope_statement_list
+	| scope_statement_list
 
 scope_statement_list
-	: statement                        { this.debugRule(); }
-	| scope                            { this.debugRule(); }
-	| statement scope_statement_list   { this.debugRule(); }
-	| scope scope_statement_list       { this.debugRule(); }
+	: statement
+	| scope
+	| statement scope_statement_list
+	| scope scope_statement_list
 
 
 /**
@@ -90,8 +93,8 @@ block
 	| statement
 
 block_statement_list
-	: statement                          { this.debugRule(); }
-	| statement block_statement_list     { this.debugRule(); }
+	: statement
+	| statement block_statement_list
 
 /**
  * ----------------------------------------------------------------
@@ -108,8 +111,8 @@ var_declaration_list
 	| var_declaration var_declaration_list
 
 var_declaration
-	: TYPE_INT var_list SEMI          { this.declareIntSymbols($2); }
-	| TYPE_LONG var_list SEMI         { this.declareLongSymbols($2); }
+	: TYPE_INT var_list SEMI                { this.declareIntSymbols($2); }
+	| TYPE_LONG var_list SEMI               { this.declareLongSymbols($2); }
 
 var_list
 	: ID                                    { $$ = this.newIdList($1); }
@@ -136,10 +139,12 @@ statement
 
 if_statement
 	: IF if_condition if_body ENDIF                                 { this.ifInst(); }
-	// Error handling:
-	| IF expr                                                       { this.errorIfWithoutParens(); }
-	| IF LPAREN expr relational_operator expr THEN                  { this.errorIfUnclosedParens(); }
-	| IF LPAREN expr RPAREN                                         { this.errorIfWithoutRelationalOperator(); }
+	| IF if_error_condition
+
+if_error_condition
+	: expr                                                          { this.errorIfWithoutParens(); }
+	| LPAREN expr relational_operator expr THEN                     { this.errorIfUnclosedParens(); }
+	| LPAREN expr RPAREN                                            { this.errorIfWithoutRelationalOperator(); }
 
 if_body
 	: THEN block
@@ -152,11 +157,16 @@ if_condition
 	: bool_expr                                                     { this.ifCondition($1); }
 
 loop_statement
-	: LOOP block UNTIL loop_condition                               { this.debugRule(); }
-	// Error handling:
-	| LOOP block UNTIL expr                                         { this.errorLoopWithoutParens(); }
-	| LOOP block UNTIL LPAREN expr relational_operator expr THEN    { this.errorLoopUnclosedParens(); }
-	| LOOP block UNTIL LPAREN expr RPAREN                           { this.errorLoopWithoutRelationalOperator(); }
+	: loop_keyword block UNTIL loop_condition
+	| loop_keyword block UNTIL loop_error_condition
+
+loop_keyword
+	: LOOP                                                          { this.loopKeyword(); }
+
+loop_error_condition
+	: expr                                                          { this.errorLoopWithoutParens(); }
+	| LPAREN expr relational_operator expr THEN                     { this.errorLoopUnclosedParens(); }
+	| LPAREN expr RPAREN                                            { this.errorLoopWithoutRelationalOperator(); }
 
 loop_condition
 	: bool_expr                                                     { this.loopCondition($1); }
@@ -173,7 +183,7 @@ relational_operator
 	| NOTEQ                             { $$ = $1; }
 
 assign_statement
-	: ID ASSIGN expr SEMI               { $$ = this.assignOp($1, $3); }
+	: ID ASSIGN expr SEMI               { $$ = this.assignOp($1, $2, $3); }
 
 print_statement
 	: PRINT LPAREN STR RPAREN SEMI      { $$ = this.printOp(this.strConst($3)); }
@@ -185,13 +195,13 @@ print_statement
  */
 
 expr
-	: expr PLUS term                    { $$ = this.addOp($1, $3); }
-	| expr MINUS term                   { $$ = this.subOp($1, $3); }
+	: expr PLUS term                    { $$ = this.addOp($1, $2, $3); }
+	| expr MINUS term                   { $$ = this.subOp($1, $2, $3); }
 	| term                              { $$ = $1; }
 
 term
-	: term MULTIPLY factor              { $$ = this.mulOp($1, $3); }
-	| term DIVISION factor              { $$ = this.divOp($1, $3); }
+	: term MULTIPLY factor              { $$ = this.mulOp($1, $2, $3); }
+	| term DIVISION factor              { $$ = this.divOp($1, $2, $3); }
 	| factor                            { $$ = $1; }
 
 factor
@@ -200,7 +210,7 @@ factor
 	| LONG                              { $$ = this.longConst($1); }
 	| PLUS factor                       { $$ = $2; }
 	| MINUS factor                      { $$ = this.negOp($1); }
-	| ITOL LPAREN expr RPAREN           { $$ = this.itolOp($1); }
+	| ITOL LPAREN expr RPAREN           { $$ = this.itolOp($1, $3); }
 
 %%
 
