@@ -1,6 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
-import com.ciberman.fastacompiler.Symbol;
+import com.ciberman.fastacompiler.InputSource;
 
 public interface LexerContext {
 
@@ -45,12 +45,7 @@ public interface LexerContext {
     int col();
 
     /**
-     * @return The current file name
+     * @return The current input source
      */
-    String fileName();
-
-    /**
-     * Add symbol to symbol table
-     */
-    LexerContext addSymbol(Symbol symbol);
+    InputSource getInputSource();
 }

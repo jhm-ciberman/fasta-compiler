@@ -5,7 +5,8 @@ IF EXIST y.output del y.output
 
 yacc.exe -v -J^
     -Jpackage=com.ciberman.fastacompiler.parser ^
-    -Jthrows="IOException, LexicalException, SyntaxException" ^
+    -Jthrows="IOException, FastaException" ^
+    -Jextends="BaseParser" ^
     -Jnoconstruct ^
     -Jnorun ^
     -Jnodebug ^

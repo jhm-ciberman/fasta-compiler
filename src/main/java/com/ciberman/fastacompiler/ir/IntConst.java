@@ -1,6 +1,4 @@
-package com.ciberman.fastacompiler.ir.constants;
-
-import com.ciberman.fastacompiler.ir.Value;
+package com.ciberman.fastacompiler.ir;
 
 public class IntConst implements Value {
     private final int value;
@@ -29,7 +27,12 @@ public class IntConst implements Value {
     }
 
     @Override
-    public Type getType() {
-        return Type.INT;
+    public ValueType getType() {
+        return ValueType.INT;
+    }
+
+    @Override
+    public String toPrintableString(IRValueVisitor constantVisitor) {
+        return constantVisitor.intConstString(this);
     }
 }

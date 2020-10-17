@@ -6,4 +6,8 @@ public class MulInst extends BinInst {
         super(op1, op2);
     }
 
+    @Override
+    public void accept(IRVisitor visitor) {
+        visitor.mulInst(this);
+    }
 }

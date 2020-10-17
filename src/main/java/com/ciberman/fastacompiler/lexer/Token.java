@@ -1,9 +1,11 @@
 package com.ciberman.fastacompiler.lexer;
 
+import com.ciberman.fastacompiler.InputSource;
 import org.jetbrains.annotations.Nullable;
 
 public class Token {
 
+    private final InputSource inputSource;
     private final TokenType type;
     private final String value;
     private final int line;
@@ -14,6 +16,7 @@ public class Token {
     }
 
     public Token(LexerContext ctx, TokenType type, @Nullable String value) {
+        this.inputSource = ctx.getInputSource();
         this.type = type;
         this.value = value;
         this.line = ctx.line();
@@ -39,6 +42,10 @@ public class Token {
 
     public int getCol() {
         return (value != null) ? this.col - this.value.length() : this.col;
+    }
+
+    public InputSource getInputSource() {
+        return this.inputSource;
     }
 
     @Override

@@ -1,5 +1,6 @@
 
 %{
+import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
 import com.ciberman.fastacompiler.lexer.Lexer;
@@ -103,16 +104,16 @@ block_statement_list
  */
 
 var_declaration_list
-	: var_declaration                       { this.debugRule(); }
-	| var_declaration var_declaration_list  { this.debugRule(); }
+	: var_declaration
+	| var_declaration var_declaration_list
 
 var_declaration
-	: TYPE_INT var_list SEMI          { this.debugRule(); }
-	| TYPE_LONG var_list SEMI         { this.debugRule(); }
+	: TYPE_INT var_list SEMI          { this.declareIntSymbols($2); }
+	| TYPE_LONG var_list SEMI         { this.declareLongSymbols($2); }
 
 var_list
-	: ID                                    { this.debugRule(); }
-	| ID COMMA var_list                     { this.debugRule(); }
+	: ID                                    { $$ = this.newIdList($1); }
+	| ID COMMA var_list                     { $$ = this.pushIdToList($3, $1); }
 
 /**
  * ----------------------------------------------------------------
@@ -127,43 +128,55 @@ var_list
  */
 
 statement
-	: SEMI                              { this.debugRule(); }
-	| if_statement                      { this.debugRule(); }
-        | loop_statement                    { this.debugRule(); }
-        | print_statement                   { this.debugRule(); }
-        | assign_statement                  { this.debugRule(); }
+	: SEMI
+	| if_statement
+        | loop_statement
+        | print_statement
+        | assign_statement
 
 if_statement
-	: IF relational_expr THEN block ENDIF             { this.debugRule(); }
-	| IF relational_expr THEN block ELSE block ENDIF  { this.debugRule(); }
+	: IF if_condition if_body ENDIF                                 { this.ifInst(); }
 	// Error handling:
-	| IF expr                                         { this.yyerror("IF condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: IF (foo <= bar) THEN ..."); }
-	| IF LPAREN expr relational_operator expr THEN    { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: IF (foo <= bar) THEN ..."); }
-	| IF LPAREN expr RPAREN                           { this.yyerror("IF does not have relational operator. You should add a valid relational operator. Example: IF (foo <= bar) THEN ..."); }
+	| IF expr                                                       { this.errorIfWithoutParens(); }
+	| IF LPAREN expr relational_operator expr THEN                  { this.errorIfUnclosedParens(); }
+	| IF LPAREN expr RPAREN                                         { this.errorIfWithoutRelationalOperator(); }
+
+if_body
+	: THEN block
+	| THEN if_then_block ELSE block
+
+if_then_block
+	: block                                                         { this.ifThenBlock(); }
+
+if_condition
+	: bool_expr                                                     { this.ifCondition($1); }
 
 loop_statement
-	: LOOP block UNTIL relational_expr                { this.debugRule(); }
+	: LOOP block UNTIL loop_condition                               { this.debugRule(); }
 	// Error handling:
-	| LOOP block UNTIL expr                                         { this.yyerror("LOOP..WHILE condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: LOOP .. WHILE (foo <= bar)"); }
-	| LOOP block UNTIL LPAREN expr relational_operator expr THEN    { this.yyerror("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: LOOP .. WHILE (foo <= bar)"); }
-	| LOOP block UNTIL LPAREN expr RPAREN                           { this.yyerror("LOOP..WHILE condition does not have relational operator. You should add a valid relational operator. Example: LOOP .. WHILE (foo <= bar)"); }
+	| LOOP block UNTIL expr                                         { this.errorLoopWithoutParens(); }
+	| LOOP block UNTIL LPAREN expr relational_operator expr THEN    { this.errorLoopUnclosedParens(); }
+	| LOOP block UNTIL LPAREN expr RPAREN                           { this.errorLoopWithoutRelationalOperator(); }
 
-relational_expr
-	:  LPAREN expr relational_operator expr RPAREN    { this.debugRule(); }
+loop_condition
+	: bool_expr                                                     { this.loopCondition($1); }
+
+bool_expr
+	:  LPAREN expr relational_operator expr RPAREN                  { $$ = this.branchCondition($2, $3, $4); }
 
 relational_operator
-	: GTE                               { this.debugRule(); }
-	| LTE                               { this.debugRule(); }
-	| LT                                { this.debugRule(); }
-	| GT                                { this.debugRule(); }
-	| EQ                                { this.debugRule(); }
-	| NOTEQ                             { this.debugRule(); }
+	: GTE                               { $$ = $1; }
+	| LTE                               { $$ = $1; }
+	| LT                                { $$ = $1; }
+	| GT                                { $$ = $1; }
+	| EQ                                { $$ = $1; }
+	| NOTEQ                             { $$ = $1; }
 
 assign_statement
-	: ID ASSIGN expr SEMI               { this.debugRule(); }
+	: ID ASSIGN expr SEMI               { $$ = this.assignOp($1, $3); }
 
 print_statement
-	: PRINT LPAREN STR RPAREN SEMI      { this.debugRule(); }
+	: PRINT LPAREN STR RPAREN SEMI      { $$ = this.printOp(this.strConst($3)); }
 
 /**
  * ----------------------------------------------------------------
@@ -172,39 +185,32 @@ print_statement
  */
 
 expr
-	: term PLUS term                    { this.debugRule(); }
-	| term MINUS term                   { this.debugRule(); }
-	| term                              { this.debugRule(); }
+	: expr PLUS term                    { $$ = this.addOp($1, $3); }
+	| expr MINUS term                   { $$ = this.subOp($1, $3); }
+	| term                              { $$ = $1; }
 
 term
-	: factor MULTIPLY factor            { this.debugRule(); }
-	| factor DIVISION factor            { this.debugRule(); }
-	| factor                            { this.debugRule(); }
+	: term MULTIPLY factor              { $$ = this.mulOp($1, $3); }
+	| term DIVISION factor              { $$ = this.divOp($1, $3); }
+	| factor                            { $$ = $1; }
 
 factor
-	: ID                                { this.debugRule(); }
-	| INT                               { this.debugRule(); }
-	| LONG                              { this.debugRule(); }
-	| PLUS factor                       { this.debugRule(); }
-	| MINUS factor                      { this.debugRule(); }
-	| ITOL LPAREN expr RPAREN           { this.debugRule(); }
+	: ID                                { $$ = this.id($1); }
+	| INT                               { $$ = this.intConst($1); }
+	| LONG                              { $$ = this.longConst($1); }
+	| PLUS factor                       { $$ = $2; }
+	| MINUS factor                      { $$ = this.negOp($1); }
+	| ITOL LPAREN expr RPAREN           { $$ = this.itolOp($1); }
 
 %%
 
-protected Lexer lexer;
-
-protected Token currentToken;
-
-protected IRBuilder builder;
-
-public Parser(Lexer lexer, IRBuilder irBuilder, boolean debugMode) {
-	this.lexer = lexer;
-	this.builder = irBuilder;
+public Parser(Lexer lexer, boolean debugMode) {
+	super(lexer);
 	this.yydebug = debugMode;
 }
 
-public Parser(Lexer lexer, IRBuilder irBuilder) {
-	this(lexer, irBuilder, false);
+public Parser(Lexer lexer) {
+	this(lexer, false);
 }
 
 protected void debugRule() {
@@ -212,18 +218,15 @@ protected void debugRule() {
 }
 
 protected void yyerror(String s) throws SyntaxException {
-	throw new SyntaxException(this.currentToken, this.lexer.fileName(), s);
+	this.error(s);
 }
 
 protected int yylex() throws IOException, LexicalException {
-	this.currentToken = this.lexer.getNextToken();
-	System.out.println("");
-	System.out.println("Current token: " + this.currentToken);
-	String value = this.currentToken.getValue();
-	this.yylval = new ParserVal(value);
-	return this.currentToken.getType().code();
+	Token token = this.next();
+	this.yylval = new ParserVal(token);
+	return token.getType().code();
 }
 
-public void parse() throws IOException, LexicalException, SyntaxException {
+public void parse() throws IOException, FastaException {
 	this.yyparse();
 }

@@ -1,6 +1,5 @@
 package com.ciberman.fastacompiler.lexer;
 
-import com.ciberman.fastacompiler.SymbolTable;
 import com.ciberman.fastacompiler.errors.LexicalException;
 
 import java.io.IOException;
@@ -13,11 +12,6 @@ public interface Lexer {
      * @throws IOException If some IO operation has an error
      */
     Token getNextToken() throws IOException, LexicalException;
-
-    /**
-     * @return The symbol table
-     */
-    SymbolTable getSymbolTable();
 
     /**
      * @return The current file name

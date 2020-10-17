@@ -12,9 +12,4 @@ public class LexicalWarning extends LexicalException {
     public ErrorLevel getLevel() {
         return ErrorLevel.WARN;
     }
-
-    @Override
-    protected String getErrorLevelStr() {
-        return "WARN";
-    }
 }

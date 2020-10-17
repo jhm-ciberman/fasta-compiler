@@ -1,7 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.Fasta;
-import com.ciberman.fastacompiler.SymbolTable;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 
@@ -28,11 +27,6 @@ public class RecoveryLexer implements Lexer {
                 this.handleError(exception);
             }
         }
-    }
-
-    @Override
-    public SymbolTable getSymbolTable() {
-        return this.lexer.getSymbolTable();
     }
 
     @Override

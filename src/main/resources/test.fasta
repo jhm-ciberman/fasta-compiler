@@ -1,1 +1,17 @@
-test { ambi{}}
+test {
+    INT a, b, c;
+    a = 1_i * 2_i * 2_l + 5521_l / 52_l;
+
+    IF (a > 5_i) THEN
+        b = 5000_i;
+    ENDIF
+
+    IF (a > 10_i) THEN
+        b = 123456_l;
+    ELSE
+        c = 678910_l;
+    ENDIF
+
+
+    c = 500_i;
+}

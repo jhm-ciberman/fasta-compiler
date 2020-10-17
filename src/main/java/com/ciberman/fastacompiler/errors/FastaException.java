@@ -1,19 +1,31 @@
 package com.ciberman.fastacompiler.errors;
 
+import com.ciberman.fastacompiler.InputSource;
+
 public abstract class FastaException extends Exception {
 
     public enum ErrorLevel {
         ERROR, WARN,
     }
 
-    public FastaException(String message) {
+    protected final InputSource inputSource;
+
+    public FastaException(InputSource inputSource, String message) {
         super(message);
+        this.inputSource = inputSource;
     }
 
-    public abstract ErrorLevel getLevel();
-    public abstract String getFileName();
     public abstract int getLine();
+
     public abstract int getCol();
+
+    public ErrorLevel getLevel() {
+        return ErrorLevel.ERROR;
+    }
+
+    public String getFileName() {
+        return this.inputSource.getFileName();
+    }
 
     public String toString() {
         StringBuilder s = new StringBuilder();

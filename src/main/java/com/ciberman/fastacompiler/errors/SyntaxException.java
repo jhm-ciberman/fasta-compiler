@@ -6,12 +6,9 @@ public class SyntaxException extends FastaException {
 
     protected final Token token;
 
-    protected final String fileName;
-
-    public SyntaxException(Token token, String fileName, String message) {
-        super(SyntaxException.buildMessage(token, message));
+    public SyntaxException(Token token, String message) {
+        super(token.getInputSource(), SyntaxException.buildMessage(token, message));
         this.token = token;
-        this.fileName = fileName;
     }
 
     private static String buildMessage(Token token, String message) {
@@ -33,11 +30,6 @@ public class SyntaxException extends FastaException {
     @Override
     public ErrorLevel getLevel() {
         return ErrorLevel.ERROR;
-    }
-
-    @Override
-    public String getFileName() {
-        return this.fileName;
     }
 
     @Override

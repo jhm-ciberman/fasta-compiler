@@ -1,7 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
-import com.ciberman.fastacompiler.Symbol;
-import com.ciberman.fastacompiler.SymbolTable;
+import com.ciberman.fastacompiler.InputSource;
 import com.ciberman.fastacompiler.errors.LexicalException;
 
 import java.io.*;
@@ -16,7 +15,7 @@ public class BasicLexer implements LexerContext, Lexer {
 
     private Token token = null;
 
-    private final String fileName;
+    private final InputSource inputSource;
 
     private int lineNumber = 1;
 
@@ -24,20 +23,10 @@ public class BasicLexer implements LexerContext, Lexer {
 
     private int currentCodePoint;
 
-    private final SymbolTable symbolTable = new SymbolTable();
-
-    public BasicLexer(Automata automata, InputStream inputStream, String inputName) {
-        this(automata, new InputStreamReader(inputStream), inputName);
-    }
-
-    public BasicLexer(Automata automata, Reader reader) {
-        this(automata, reader, "");
-    }
-
-    public BasicLexer(Automata automata, Reader reader, String fileName) {
+    public BasicLexer(Automata automata, InputSource inputSource) {
         this.automata = automata;
-        this.fileName = fileName == null ? "" : fileName;
-        this.reader = new BufferedReader(reader);
+        this.inputSource = inputSource;
+        this.reader = new BufferedReader(inputSource.getReader());
     }
 
     @Override
@@ -82,19 +71,17 @@ public class BasicLexer implements LexerContext, Lexer {
         return this.colNumber;
     }
 
+    @Override
+    public InputSource getInputSource() {
+        return this.inputSource;
+    }
+
     /**
      * @return The current file name
      */
     @Override
     public String fileName() {
-        return this.fileName;
-    }
-
-
-    @Override
-    public LexerContext addSymbol(Symbol symbol) {
-        this.symbolTable.add(symbol);
-        return this;
+        return this.inputSource.getFileName();
     }
 
     /**
@@ -123,13 +110,6 @@ public class BasicLexer implements LexerContext, Lexer {
         }
 
         return this.token;
-    }
-
-    /**
-     * @return The symbol table
-     */
-    public SymbolTable getSymbolTable() {
-        return this.symbolTable;
     }
 
     /**

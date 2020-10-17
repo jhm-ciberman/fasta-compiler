@@ -1,6 +1,4 @@
-package com.ciberman.fastacompiler.ir.constants;
-
-import com.ciberman.fastacompiler.ir.Value;
+package com.ciberman.fastacompiler.ir;
 
 public class LongConst implements Value {
     private final long value;
@@ -29,7 +27,12 @@ public class LongConst implements Value {
     }
 
     @Override
-    public Type getType() {
-        return Type.LONG;
+    public ValueType getType() {
+        return ValueType.LONG;
+    }
+
+    @Override
+    public String toPrintableString(IRValueVisitor constantVisitor) {
+        return constantVisitor.longConstString(this);
     }
 }

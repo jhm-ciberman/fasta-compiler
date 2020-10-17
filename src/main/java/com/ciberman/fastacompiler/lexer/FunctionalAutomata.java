@@ -1,6 +1,5 @@
 package com.ciberman.fastacompiler.lexer;
 
-import com.ciberman.fastacompiler.Symbol;
 import com.ciberman.fastacompiler.errors.LexicalException;
 
 public class FunctionalAutomata implements Automata {
@@ -61,7 +60,7 @@ public class FunctionalAutomata implements Automata {
             this.goToState(1);
         } else {
             String value = Validator.validateId(ctx);
-            ctx.peek().addSymbol(new Symbol(value, Symbol.Type.UNKNOWN)).yieldToken(new Token(ctx, TokenType.ID, value));
+            ctx.peek().yieldToken(new Token(ctx, TokenType.ID, value));
         }
     }
 
@@ -80,10 +79,10 @@ public class FunctionalAutomata implements Automata {
     private void state3(int codePoint, LexerContext ctx) throws LexicalException {
         if (codePoint == 'i') {
             String value = Validator.validateInt(ctx);
-            ctx.addSymbol(new Symbol(value, Symbol.Type.INT)).yieldToken(new Token(ctx, TokenType.INT, value));
+            ctx.yieldToken(new Token(ctx, TokenType.INT, value));
         } else if (codePoint == 'l') {
             String value = Validator.validateLong(ctx);
-            ctx.addSymbol(new Symbol(value, Symbol.Type.LONG)).yieldToken(new Token(ctx, TokenType.LONG, value));
+            ctx.yieldToken(new Token(ctx, TokenType.LONG, value));
         } else {
             throw new LexicalException(ctx, codePoint, "Integer literals must terminate with \"i\" or \"l\".");
         }
@@ -159,7 +158,7 @@ public class FunctionalAutomata implements Automata {
 
         if (codePoint == '\'') {
             String value = ctx.value();
-            ctx.addSymbol(new Symbol(value, Symbol.Type.STRING)).yieldToken(new Token(ctx, TokenType.STR, value));
+            ctx.yieldToken(new Token(ctx, TokenType.STR, value));
         } else {
             if (codePoint != '\n') {
                 ctx.save();

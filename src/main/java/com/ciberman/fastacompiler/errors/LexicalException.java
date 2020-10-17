@@ -10,18 +10,15 @@ public class LexicalException extends FastaException {
 
     private final int codePoint;
 
-    private final String fileName;
-
     public LexicalException(LexerContext ctx, int codePoint) {
         this(ctx, codePoint, "");
     }
 
     public LexicalException(LexerContext ctx, int codePoint, String message) {
-        super(LexicalException.buildMessage(codePoint, message));
+        super(ctx.getInputSource(), LexicalException.buildMessage(codePoint, message));
         this.line = ctx.line();
         this.col = ctx.col();
         this.codePoint = codePoint;
-        this.fileName = ctx.fileName();
     }
 
     private static String buildMessage(int codePoint, String message) {
@@ -46,18 +43,12 @@ public class LexicalException extends FastaException {
         return ErrorLevel.ERROR;
     }
 
-    protected String getErrorLevelStr() {
-        return "ERROR";
-    }
-
-    public String getFileName() {
-        return this.fileName;
-    }
-
+    @Override
     public int getLine() {
         return this.line;
     }
 
+    @Override
     public int getCol() {
         return this.col;
     }

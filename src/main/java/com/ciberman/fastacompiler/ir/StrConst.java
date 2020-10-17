@@ -1,6 +1,5 @@
-package com.ciberman.fastacompiler.ir.constants;
+package com.ciberman.fastacompiler.ir;
 
-import com.ciberman.fastacompiler.ir.Value;
 import org.jetbrains.annotations.NotNull;
 
 public class StrConst implements Value {
@@ -30,7 +29,12 @@ public class StrConst implements Value {
     }
 
     @Override
-    public Type getType() {
-        return Type.STR;
+    public ValueType getType() {
+        return ValueType.STR;
+    }
+
+    @Override
+    public String toPrintableString(IRValueVisitor constantVisitor) {
+        return constantVisitor.strConstString(this);
     }
 }

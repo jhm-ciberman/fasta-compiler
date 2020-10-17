@@ -11,14 +11,13 @@ import java.io.InputStream;
 
 public class FastaCliParser {
 
-    public static class FastaInputCommand {
-        public InputStream stream;
-        public String fileName;
+    public static class FastaCommandConfig {
+        public InputSource inputSource;
         public Automata automataImpl;
     }
 
-    private CommandLineParser cliParser;
-    private Options options;
+    private final CommandLineParser cliParser;
+    private final Options options;
 
     public FastaCliParser() {
         this.options = new Options();
@@ -34,7 +33,7 @@ public class FastaCliParser {
         this.cliParser = new DefaultParser();
     }
 
-    public FastaInputCommand parse(String[] args) throws FileNotFoundException {
+    public FastaCommandConfig parse(String[] args) throws FileNotFoundException {
         CommandLine cmd;
         try {
             cmd = this.cliParser.parse(this.options, args);
@@ -44,24 +43,25 @@ public class FastaCliParser {
             return null;
         }
 
-        FastaInputCommand input = new FastaInputCommand();
-        input.automataImpl = this.getAutomataImpl(cmd.getOptionValue("lexer"));
+        FastaCommandConfig config = new FastaCommandConfig();
+        config.automataImpl = this.getAutomataImpl(cmd.getOptionValue("lexer"));
 
         if (cmd.hasOption("demo")) {
-            input.fileName = cmd.getOptionValue("demo") + ".fasta";
-            input.stream = Main.class.getClassLoader().getResourceAsStream(input.fileName);
+            String fileName = cmd.getOptionValue("demo") + ".fasta";
+            InputStream stream = Main.class.getClassLoader().getResourceAsStream(fileName);
+            config.inputSource = new InputSource(stream, fileName);
+
         } else {
             String[] inputArgs = cmd.getArgs();
             if (inputArgs.length > 0) {
-                input.fileName = inputArgs[0];
-                input.stream = new FileInputStream(input.fileName);
+                config.inputSource = new InputSource(new FileInputStream(inputArgs[0]), inputArgs[0]);
             } else {
                 this.printHelpAndExit();
                 return null;
             }
         }
 
-        return input;
+        return config;
     }
 
     private void printHelpAndExit() {
