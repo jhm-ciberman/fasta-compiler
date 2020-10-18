@@ -96,10 +96,10 @@ public class BaseParser {
             throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
         }
 
+        AssignInst inst = this.theProgram.createAssignInst(symbol, value);
         if (value instanceof Inst) {
             symbol.setLastAssignment((Inst) value);
         } else {
-            AssignInst inst = this.theProgram.createAssignInst(value);
             symbol.setLastAssignment(inst);
             return new ParserVal(inst);
         }
@@ -117,7 +117,7 @@ public class BaseParser {
         if (inst == null) {
             throw new UninitializedVariableException(token);
         }
-        return new ParserVal(inst);
+        return new ParserVal(symbol);
     }
 
     protected ParserVal addOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {

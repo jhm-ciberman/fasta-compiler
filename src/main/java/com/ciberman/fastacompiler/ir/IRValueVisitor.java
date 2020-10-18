@@ -5,4 +5,5 @@ public interface IRValueVisitor {
     String longConstString(LongConst c);
     String strConstString(StrConst c);
     String instrString(Inst instr);
+    String symbolString(Symbol symbol);
 }

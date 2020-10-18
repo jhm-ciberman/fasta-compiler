@@ -1,6 +1,6 @@
 package com.ciberman.fastacompiler.ir;
 
-public class Symbol {
+public class Symbol implements Value {
 
     private final String name;
 
@@ -27,6 +27,11 @@ public class Symbol {
 
     public ValueType getType() {
         return this.type;
+    }
+
+    @Override
+    public String toPrintableString(IRValueVisitor constantVisitor) {
+        return constantVisitor.symbolString(this);
     }
 
     public void setType(ValueType type) {

@@ -2,8 +2,15 @@ package com.ciberman.fastacompiler.ir;
 
 public class AssignInst extends UnaryInstr {
 
-    public AssignInst(Value op) {
+    private Symbol symbol;
+
+    public AssignInst(Symbol symbol, Value op) {
         super(op);
+        this.symbol = symbol;
+    }
+
+    public Symbol getSymbol() {
+        return symbol;
     }
 
     @Override

@@ -162,8 +162,8 @@ public class IRProgram {
         return this.pushInstr(new BranchInst(null));
     }
 
-    public AssignInst createAssignInst(Value value) {
-        return this.pushInstr(new AssignInst(value));
+    public AssignInst createAssignInst(Symbol symbol, Value value) {
+        return this.pushInstr(new AssignInst(symbol, value));
     }
 
     public NoOpInst createNoOpInst() {

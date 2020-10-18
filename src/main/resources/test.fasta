@@ -1,20 +1,20 @@
 test {
-    INT a, b, c;
-    a = 1_i * 2_i * 2_l + 5521_l / 52_l;
+    LONG a, b, c;
+    a = 1_l * 2_l * 2_l + 5521_l / 52_l;
 
-    IF (a > 5_i) THEN
-        b = 5000_i;
+    IF (a > 5_l) THEN
+        b = 5000_l;
     ENDIF
 
-    IF (a > 10_i) THEN
+    IF (a > 10_l) THEN
         b = 123456_l;
     ELSE
-        c = 678910_l;
+        b = 678910_l;
     ENDIF
 
     LOOP
-        b = 10_i;
-    UNTIL (a > 10_i)
+        b = 10_l + b;
+    UNTIL (a > 10_l)
 
-    c = 500_i;
+    c = 500_l;
 }
