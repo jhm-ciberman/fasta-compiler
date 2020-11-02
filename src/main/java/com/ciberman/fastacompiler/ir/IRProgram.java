@@ -7,6 +7,7 @@ import java.util.*;
 public class IRProgram {
 
     private final List<Inst> instList = new ArrayList<>();
+    private final List<BranchInst> branchesList = new ArrayList<>();
 
     private final Set<IntConst> intConsts = new HashSet<>();
     private final Set<LongConst> longConsts = new HashSet<>();
@@ -155,11 +156,15 @@ public class IRProgram {
     }
 
     public BranchInst createBranchInst(BranchCondition branchCondition) {
-        return this.pushInstr(new BranchInst(branchCondition, null));
+        BranchInst branchInst = new BranchInst(branchCondition, null);
+        this.branchesList.add(branchInst);
+        return this.pushInstr(branchInst);
     }
 
     public BranchInst createBranchInst() {
-        return this.pushInstr(new BranchInst(null));
+        BranchInst branchInst = new BranchInst(null);
+        this.branchesList.add(branchInst);
+        return this.pushInstr(branchInst);
     }
 
     public AssignInst createAssignInst(Symbol symbol, Value value) {
@@ -214,6 +219,10 @@ public class IRProgram {
 
     public Iterable<Inst> instructions() {
         return instList;
+    }
+
+    public Iterable<BranchInst> branches() {
+        return branchesList;
     }
 
 }

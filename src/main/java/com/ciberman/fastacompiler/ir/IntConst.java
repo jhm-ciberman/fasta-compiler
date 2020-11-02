@@ -1,6 +1,8 @@
 package com.ciberman.fastacompiler.ir;
 
-public class IntConst implements Value {
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
+
+public class IntConst implements Value, Const {
     private final int value;
 
     public IntConst(int value) {
@@ -32,7 +34,7 @@ public class IntConst implements Value {
     }
 
     @Override
-    public String toPrintableString(IRValueVisitor constantVisitor) {
-        return constantVisitor.intConstString(this);
+    public String toPrintableString(IRValueStringConverter valueVisitor) {
+        return valueVisitor.getIntConstString(this);
     }
 }

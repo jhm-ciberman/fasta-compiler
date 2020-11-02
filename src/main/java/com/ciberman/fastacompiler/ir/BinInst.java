@@ -1,6 +1,8 @@
 package com.ciberman.fastacompiler.ir;
 
-public abstract class BinInst implements Inst, Value {
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
+
+public abstract class BinInst extends Inst implements Value {
 
     protected Value op1;
 
@@ -25,7 +27,7 @@ public abstract class BinInst implements Inst, Value {
     }
 
     @Override
-    public String toPrintableString(IRValueVisitor constantVisitor) {
-        return constantVisitor.instrString(this);
+    public String toPrintableString(IRValueStringConverter valueVisitor) {
+        return valueVisitor.getInstrString(this);
     }
 }

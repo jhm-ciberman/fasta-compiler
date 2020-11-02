@@ -11,5 +11,4 @@ public interface IRVisitor {
     void branchInst(BranchInst instr);
     void noopInst(NoOpInst instr);
     void assignInst(AssignInst instr);
-
 }

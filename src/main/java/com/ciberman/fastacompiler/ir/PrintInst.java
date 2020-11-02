@@ -1,6 +1,6 @@
 package com.ciberman.fastacompiler.ir;
 
-public class PrintInst implements Inst {
+public class PrintInst extends Inst {
     private final StrConst string;
 
     public PrintInst(StrConst string) {

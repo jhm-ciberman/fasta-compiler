@@ -3,7 +3,7 @@ package com.ciberman.fastacompiler.ir;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BranchInst implements Inst {
+public class BranchInst extends Inst {
     private @Nullable final BranchCondition condition;
     private @Nullable Inst target;
 

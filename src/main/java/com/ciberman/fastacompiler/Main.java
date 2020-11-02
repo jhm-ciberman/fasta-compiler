@@ -8,6 +8,7 @@ import com.ciberman.fastacompiler.lexer.BasicLexer;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.RecoveryLexer;
 import com.ciberman.fastacompiler.out.ConsoleDebugOutput;
+import com.ciberman.fastacompiler.asm.IntelAsmOutput;
 import com.ciberman.fastacompiler.parser.Parser;
 
 import java.io.IOException;
@@ -35,6 +36,9 @@ public class Main {
         ConsoleDebugOutput debugOutput = new ConsoleDebugOutput();
         debugOutput.printProgram(program);
         debugOutput.printSymbolTable(program);
+
+        IntelAsmOutput masmOutput = new IntelAsmOutput();
+        masmOutput.generate(program);
 
     }
 }

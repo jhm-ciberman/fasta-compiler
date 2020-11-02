@@ -1,8 +1,9 @@
 package com.ciberman.fastacompiler.ir;
 
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
 import org.jetbrains.annotations.NotNull;
 
-public class StrConst implements Value {
+public class StrConst implements Value, Const {
     @NotNull private final String value;
 
     public StrConst(@NotNull String value) {
@@ -34,7 +35,7 @@ public class StrConst implements Value {
     }
 
     @Override
-    public String toPrintableString(IRValueVisitor constantVisitor) {
-        return constantVisitor.strConstString(this);
+    public String toPrintableString(IRValueStringConverter valueVisitor) {
+        return valueVisitor.getStrConstString(this);
     }
 }

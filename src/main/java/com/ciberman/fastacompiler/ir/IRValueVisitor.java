@@ -1,9 +1,9 @@
 package com.ciberman.fastacompiler.ir;
 
-public interface IRValueVisitor {
-    String intConstString(IntConst c);
-    String longConstString(LongConst c);
-    String strConstString(StrConst c);
-    String instrString(Inst instr);
-    String symbolString(Symbol symbol);
+public interface IRValueVisitor<T> {
+    T intConstValue(IntConst c);
+    T longConstValue(LongConst c);
+    T strConstValue(StrConst c);
+    T instrValue(Inst instr);
+    T symbolValue(Symbol symbol);
 }

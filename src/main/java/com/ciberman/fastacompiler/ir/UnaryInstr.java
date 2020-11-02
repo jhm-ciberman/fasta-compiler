@@ -1,6 +1,8 @@
 package com.ciberman.fastacompiler.ir;
 
-public abstract class UnaryInstr implements Inst, Value {
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
+
+public abstract class UnaryInstr extends Inst implements Value {
 
     protected Value op;
 
@@ -18,7 +20,7 @@ public abstract class UnaryInstr implements Inst, Value {
     }
 
     @Override
-    public String toPrintableString(IRValueVisitor constantVisitor) {
-        return constantVisitor.instrString(this);
+    public String toPrintableString(IRValueStringConverter valueVisitor) {
+        return valueVisitor.getInstrString(this);
     }
 }

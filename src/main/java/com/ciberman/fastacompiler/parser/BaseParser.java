@@ -187,7 +187,9 @@ public class BaseParser {
     }
 
     protected void loopCondition(ParserVal test) {
-        BranchInst branchInst = this.theProgram.createBranchInst((BranchCondition) test.obj);
+        BranchCondition condition = (BranchCondition) test.obj;
+        condition.negateOperator();
+        BranchInst branchInst = this.theProgram.createBranchInst(condition);
         branchInst.setTarget(this.instructionStack.pop());
     }
 

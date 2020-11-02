@@ -1,5 +1,7 @@
 package com.ciberman.fastacompiler.ir;
 
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
+
 public class Symbol implements Value {
 
     private final String name;
@@ -30,8 +32,8 @@ public class Symbol implements Value {
     }
 
     @Override
-    public String toPrintableString(IRValueVisitor constantVisitor) {
-        return constantVisitor.symbolString(this);
+    public String toPrintableString(IRValueStringConverter valueVisitor) {
+        return valueVisitor.getSymbolString(this);
     }
 
     public void setType(ValueType type) {

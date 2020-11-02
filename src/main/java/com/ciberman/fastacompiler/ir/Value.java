@@ -1,6 +1,8 @@
 package com.ciberman.fastacompiler.ir;
 
+import com.ciberman.fastacompiler.out.IRValueStringConverter;
+
 public interface Value {
     ValueType getType();
-    String toPrintableString(IRValueVisitor constantVisitor);
+    String toPrintableString(IRValueStringConverter valueVisitor);
 }
