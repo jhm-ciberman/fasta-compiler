@@ -1,6 +1,8 @@
 package com.ciberman.fastacompiler.ir;
 
 import com.ciberman.fastacompiler.out.IRValueStringConverter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Symbol implements Value {
 
@@ -8,19 +10,21 @@ public class Symbol implements Value {
 
     private ValueType type; // Change my later!
 
-    private Inst lastAssignment;
+    private boolean wasInitialized;
+
+    private @Nullable Const initialValue;
 
     protected Symbol(String name, ValueType type) {
         this.name = name;
         this.type = type;
     }
 
-    public Inst getLastAssignment() {
-        return lastAssignment;
+    public boolean isInitialized() {
+        return wasInitialized;
     }
 
-    public void setLastAssignment(Inst inst) {
-        this.lastAssignment = inst;
+    public void markAsInitialized() {
+        this.wasInitialized = true;
     }
 
     public String getName() {
@@ -41,10 +45,25 @@ public class Symbol implements Value {
     }
 
     @Override
+    public String getDebugString() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
     public String toString() {
         return "Symbol{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
+                ", initialValue=" + initialValue.getValueDebugString() +
                 '}';
+    }
+
+    public void setInitialValue(@NotNull Const value) {
+        this.initialValue = value;
+        this.wasInitialized = true;
+    }
+
+    public @Nullable Const getInitialValue() {
+        return initialValue;
     }
 }

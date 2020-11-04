@@ -186,7 +186,15 @@ assign_statement
 	: ID ASSIGN expr SEMI               { $$ = this.assignOp($1, $2, $3); }
 
 print_statement
-	: PRINT LPAREN STR RPAREN SEMI      { $$ = this.printOp(this.strConst($3)); }
+	: PRINT LPAREN print_argument_list RPAREN SEMI
+
+print_argument_list
+	: print_argument
+	| print_argument COMMA print_argument_list
+
+print_argument
+	: STR                               { this.printOp(this.strConst($1)); }
+	| expr                              { this.printOp($1); }
 
 /**
  * ----------------------------------------------------------------
@@ -209,7 +217,7 @@ factor
 	| INT                               { $$ = this.intConst($1); }
 	| LONG                              { $$ = this.longConst($1); }
 	| PLUS factor                       { $$ = $2; }
-	| MINUS factor                      { $$ = this.negOp($1); }
+	| MINUS factor                      { $$ = this.negOp($2); }
 	| ITOL LPAREN expr RPAREN           { $$ = this.itolOp($1, $3); }
 
 %%

@@ -1,82 +1,34 @@
 package com.ciberman.fastacompiler.asm;
 
 import com.ciberman.fastacompiler.ir.*;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IntelAsmOutput implements IRVisitor {
 
-    private final RegTable reg;
-    private final MemTable mem;
+
+    private final LocationResolver resolver;
     private final MasmOutput out;
     private int labelsCount = 0;
     public Map<Inst, String> labelsMap = new HashMap<>();
+    private final StrConst formatDecimal = new StrConst("%d");
 
     public IntelAsmOutput() {
-        this.mem = new MemTable();
-        this.reg = new RegTable();
         this.out = new MasmOutput();
+        this.resolver = new LocationResolver(this.out);
     }
 
-    public @NotNull Location resolve(Value value) {
-        Location loc = this.reg.findLocation(value);
-        if (loc == null) {
-            loc = this.mem.findLocation(value);
-            if (loc == null) {
-                throw new RuntimeException("Value " + value.toString() + " not declared");
+
+    public void generate(IRProgram program, String outputFilename) throws IOException {
+        for (Symbol symbol : program.symbols()) {
+            if (symbol.isInitialized()) {
+                this.resolver.findMemLocationOrCreate(symbol);
             }
         }
-        return loc;
-    }
 
-    private @NotNull RegLocation requestReg(Value value) {
-        RegLocation loc = this.reg.requestReg(value);
-        if (loc == null) {
-            throw new RuntimeException("Not enough registers.");
-        }
-        return loc;
-    }
-
-    public @NotNull Location resolveToMemory(Symbol symbol) {
-        Location loc = this.mem.findLocation(symbol);
-        if (loc == null) {
-            throw new RuntimeException("Value " + symbol.toString() + " not declared");
-        }
-        return loc;
-    }
-
-    public @NotNull RegLocation resolveToReg(Value value) {
-        Location loc = this.resolve(value);
-        if (! (loc instanceof RegLocation)) {
-            RegLocation reg = this.requestReg(value);
-            this.out.addCode("mov",  reg, loc);
-            return reg;
-        }
-        return (RegLocation) loc;
-    }
-
-
-    public void generate(IRProgram program) {
-        for (LongConst c : program.longConsts()) {
-            String name = this.mem.reserveGlobalLocation(c).getName();
-            this.out.addDataDeclaration(name + " dd " + c.getValue());
-        }
-        for (IntConst c : program.intConsts()) {
-            String name = this.mem.reserveGlobalLocation(c).getName();
-            this.out.addDataDeclaration(name + " dw " + c.getValue());
-        }
-        for (StrConst c : program.strConsts()) {
-            String name = this.mem.reserveGlobalLocation(c).getName();
-            this.out.addDataDeclaration(name + " db " + this.getStringConstValue(c));
-        }
-        for (Symbol s : program.symbols()) {
-            String name = this.mem.reserveGlobalLocation(s).getName();
-            String size = this.getSymbolSizeString(s);
-            this.out.addDataDeclaration(name + " " + size + " 0");
-        }
         for (BranchInst branch : program.branches()) {
             Inst target = branch.getTarget();
             if (target != null) {
@@ -86,6 +38,7 @@ public class IntelAsmOutput implements IRVisitor {
                 this.labelsMap.put(target, name);
             }
         }
+
         for (Inst instr : program.instructions()) {
             if (instr.isLeader()) {
                 this.out.addLabel(this.labelsMap.get(instr));
@@ -93,102 +46,179 @@ public class IntelAsmOutput implements IRVisitor {
             instr.accept(this);
         }
 
-        this.out.generate();
-    }
-
-    private String getSymbolSizeString(Symbol symbol) {
-        switch (symbol.getType()) {
-            case LONG: return "dd";
-            case INT:  return "dw";
-            case STR:  return "db";
-        }
-        return "db";
-    }
-
-    protected String getStringConstValue(StrConst strConst) {
-        if (strConst.getValue().isEmpty())
-            return "10, 0";
-        return "'" + strConst.getValue() + "', 10, 0";
-    }
-
-
-    private static class LocationPair {
-
-        private final Location dst;
-        private final Location src;
-
-        public LocationPair(Location dst, Location src) {
-            this.dst = dst;
-            this.src = src;
-        }
-    }
-
-    public LocationPair resolveLocationPair(Location loc1, Location loc2, Value op1, Value op2) {
-
-        if (! loc1.isReg() && ! loc2.isReg()) { // 2 memory values
-            Location reg = this.requestReg(op1);
-            this.out.addCode("mov", reg, loc1);
-            return new LocationPair(reg, loc2);
+        for (MemLocation location : this.resolver.getGlobalLocations()) {
+            this.out.addDataDeclaration(new MemDeclaration(location));
         }
 
-        return new LocationPair(loc1, loc2);
+        this.out.generate(outputFilename);
     }
 
-    private LocationPair resolveLocationPairForBinInst(BinInst instr) {
-        Location loc1 = this.resolve(instr.getOp1());
-        Location loc2 = this.resolve(instr.getOp2());
-        return this.resolveLocationPair(loc1, loc2, instr.getOp1(), instr.getOp2());
+    private void printDebug(Inst inst) {
+        //StringBuilder str = new StringBuilder();
+        //for (RegLocation reg : this.resolver.getAvailableRegisters()) {
+        //    str.append(reg.toString()).append(" ");
+        //}
+        this.out.addComment("===> " + inst.toString()); // + ". Available Registers: " + str.toString());
     }
 
     @Override
     public void addInst(AddInst instr) {
-        LocationPair pair = this.resolveLocationPairForBinInst(instr);
-        this.out.addCode("add", pair.dst, pair.src);
-        pair.dst.setContent(instr);
+        Location left = resolver.resolveOrCreate(instr.getLeft());
+        Location right = resolver.resolveOrCreate(instr.getRight());
+
+        if (left.isReg()) { // (reg, reg) or (reg, mem)
+            this.out.addCode("add", left, right);
+            left.setContent(instr);
+        } else {
+            if (right.isReg()) { // (mem, reg)
+                RegLocation reg = (RegLocation) right;
+                this.out.addCode("add", reg, left);
+                reg.setContent(instr);
+            } else { // (mem, mem)
+                RegLocation reg = resolver.resolveOrCreateToReg(instr.getRight());
+                this.out.addCode("add", reg, left);
+                reg.setContent(instr);
+            }
+        }
+
+        this.out.addJump("jo", this.out.getOverflowErrorLabel());
     }
 
     @Override
     public void subInst(SubInst instr) {
-        LocationPair pair = this.resolveLocationPairForBinInst(instr);
-        this.out.addCode("sub", pair.dst, pair.src);
-        pair.dst.setContent(instr);
+        Location left = resolver.resolveOrCreate(instr.getLeft());
+        Location right = resolver.resolveOrCreate(instr.getRight());
+
+        if (left.isReg()) {
+            RegLocation leftReg = (RegLocation) left;
+            if (right.isReg()) {
+                // Case (reg, reg)
+                this.out.addCode("sub", leftReg, left);
+                leftReg.setContent(instr);
+            } else {
+                // Case (reg, mem)
+                RegLocation reg = resolver.resolveOrCreateToReg(instr.getRight());
+                this.out.addCode("sub", leftReg, reg);
+                leftReg.setContent(instr);
+                reg.markAsFree();
+            }
+        } else {
+            if (right.isReg()) {
+                // Case (mem, reg)
+                RegLocation rightReg = (RegLocation) right;
+                RegLocation reg = resolver.resolveOrCreateToReg(instr.getLeft());
+                this.out.addCode("sub", reg, rightReg);
+                reg.setContent(instr);
+                rightReg.markAsFree();
+            } else {
+                // Case (mem, mem)
+                RegLocation regLeft = resolver.resolveOrCreateToReg(instr.getLeft());
+                RegLocation regRight = resolver.resolveOrCreateToReg(instr.getRight());
+                this.out.addCode("sub", regLeft, regRight);
+                regLeft.setContent(instr);
+                regRight.markAsFree();
+            }
+        }
     }
 
     @Override
     public void mulInst(MulInst instr) {
-        // TODO: Add mul
+        Location left = resolver.resolveOrCreate(instr.getLeft());
+        Location right = resolver.resolveOrCreate(instr.getRight());
+        this.resolver.spillRegIfNecessary(this.resolver.REG_DX);
+        if (left == this.resolver.REG_AX) {
+            // Case (eax, ???)
+            this.out.addCode("mul", right);
+            left.setContent(instr);
+        } else if (right == this.resolver.REG_AX) {
+            // Case (???, eax)
+            this.out.addCode("mul", left);
+            right.setContent(instr);
+        } else {
+            // Case (???, ???)
+            RegLocation targetReg = this.resolver.resolveOrCreateToReg(instr.getLeft(), this.resolver.REG_AX);
+            this.out.addCode("mul", right);
+            targetReg.setContent(instr);
+        }
     }
 
     @Override
     public void divInst(DivInst instr) {
-        // TODO: Add div
+        RegLocation left = resolver.resolveOrCreateToReg(instr.getLeft(), this.resolver.REG_AX);
+        RegLocation right = resolver.resolveOrCreateToReg(instr.getRight());
+
+        this.out.addCode("test", right, right);
+        this.out.addJump("jz", this.out.getDivisionByZeroErrorLabel());
+
+        if (right == this.resolver.REG_DX) {
+            right = this.resolver.moveRegToAnyOtherReg(right);
+        } else {
+            this.resolver.spillRegIfNecessary(this.resolver.REG_DX);
+        }
+        this.clearReg(this.resolver.REG_DX);
+        this.out.addCode("div", right);
+        left.setContent(instr);
+        right.markAsFree();
+    }
+
+    private void clearReg(RegLocation reg) {
+        this.out.addCode("xor", reg, reg); // Clears dx
+        reg.markAsFree();
     }
 
     @Override
     public void negInst(NegInst instr) {
-        Location op = this.resolveToReg(instr.getOp());
+        Location op = this.resolver.resolveOrCreateToReg(instr.getOp());
         this.out.addCode("neg", op);
         op.setContent(instr);
     }
 
     @Override
     public void itolInst(ItolInst instr) {
-        Location op = this.resolveToReg(instr.getOp());
-        this.out.addCode("cwde", op);
-        op.setContent(instr);
+        this.convertToLong(instr.getOp()).setContent(instr);
+    }
+
+    public RegLocation convertToLong(Value value) {
+        RegLocation targetReg = this.resolver.resolveOrCreateToReg(value, this.resolver.REG_AX);
+        this.out.addCode("cwde");
+        return targetReg;
     }
 
     @Override
     public void printInst(PrintInst instr) {
-        this.out.addPrint(this.resolve(instr.getString()));
+        this.resolver.preserveVolatileRegisters();
+        Value value = instr.getValue();
+        switch (value.getType()) {
+            case LONG: {
+                MemLocation format = this.resolver.findMemLocationOrCreate(this.formatDecimal);
+                Location location = this.resolver.resolveOrFail(value);
+                this.out.addPrint(format, location);
+                location.markAsFree();
+                break;
+            }
+            case INT: {
+                MemLocation format = this.resolver.findMemLocationOrCreate(this.formatDecimal);
+                RegLocation location = this.convertToLong(value);
+                this.out.addPrint(format, location);
+                location.markAsFree();
+                break;
+            }
+            case STR: {
+                this.out.addPrint(this.resolver.findMemLocationOrCreate(value));
+                break;
+            }
+        }
+
     }
 
     private String condition(@Nullable BranchCondition condition) {
         if (condition == null) return "jmp";
 
-        Location loc1 = this.resolveToReg(condition.getOp1());
-        Location loc2 = this.resolveToReg(condition.getOp2());
+        RegLocation loc1 = this.resolver.resolveOrCreateToReg(condition.getOp1());
+        RegLocation loc2 = this.resolver.resolveOrCreateToReg(condition.getOp2());
         this.out.addCode("cmp", loc1, loc2);
+        loc1.markAsFree();
+        loc2.markAsFree();
 
         switch (condition.getOperator()) {
             case GT:    return "jg";
@@ -215,8 +245,9 @@ public class IntelAsmOutput implements IRVisitor {
 
     @Override
     public void assignInst(AssignInst instr) {
-        Location dst = this.resolveToMemory(instr.getSymbol());
-        Location src = this.resolveToReg(instr.getOp());
+        MemLocation dst = this.resolver.findMemLocationOrCreate(instr.getSymbol());
+        RegLocation src = this.resolver.resolveOrCreateToReg(instr.getOp());
         this.out.addCode("mov", dst, src);
+        src.markAsFree();
     }
 }

@@ -2,7 +2,7 @@ package com.ciberman.fastacompiler.ir;
 
 import com.ciberman.fastacompiler.out.IRValueStringConverter;
 
-public class LongConst implements Value, Const {
+public class LongConst extends Const implements Value {
     private final long value;
 
     public LongConst(long value) {
@@ -36,5 +36,10 @@ public class LongConst implements Value, Const {
     @Override
     public String toPrintableString(IRValueStringConverter valueVisitor) {
         return valueVisitor.getLongConstString(this);
+    }
+
+    @Override
+    public String getValueDebugString() {
+        return String.valueOf(this.getValue()) + "_l";
     }
 }

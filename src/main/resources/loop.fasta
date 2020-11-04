@@ -1,17 +1,15 @@
 loop {
-    INT a, b, c;
+    INT a, b;
+    LONG c;
+    a = 200_i;
+    b = 100_i;
+    c = 2_l;
 
-    a = 100_i;
-    b = 200_i;
-    c = 2_i;
-
-    LOOP
-        c = c + ITOL(a * b);
-    UNTIL (c > 100000_l)
-
+    PRINT('Even numbers: ');
     LOOP
         BEGIN
-        c = c + ITOL(a * b);
+        PRINT(c, ', ');
+        c = c + ITOL(a / b);
         END
-    UNTIL (c > 100000_l)
+    UNTIL (c >= 100_l)
 }

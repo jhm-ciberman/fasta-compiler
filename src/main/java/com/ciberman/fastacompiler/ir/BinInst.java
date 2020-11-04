@@ -2,28 +2,28 @@ package com.ciberman.fastacompiler.ir;
 
 import com.ciberman.fastacompiler.out.IRValueStringConverter;
 
-public abstract class BinInst extends Inst implements Value {
+public abstract class BinInst extends ValueInst {
 
-    protected Value op1;
+    protected Value left;
 
-    protected Value op2;
+    protected Value right;
 
-    protected BinInst(Value op1, Value op2) {
-        this.op1 = op1;
-        this.op2 = op2;
+    protected BinInst(Value left, Value right) {
+        this.left = left;
+        this.right = right;
     }
 
-    public Value getOp1() {
-        return op1;
+    public Value getLeft() {
+        return left;
     }
 
-    public Value getOp2() {
-        return op2;
+    public Value getRight() {
+        return right;
     }
 
     @Override
     public ValueType getType() {
-        return this.op1.getType();
+        return this.left.getType();
     }
 
     @Override

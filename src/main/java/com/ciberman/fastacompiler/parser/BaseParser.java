@@ -96,15 +96,20 @@ public class BaseParser {
             throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
         }
 
-        AssignInst inst = this.theProgram.createAssignInst(symbol, value);
-        if (value instanceof Inst) {
-            symbol.setLastAssignment((Inst) value);
+        if (value instanceof Const) {
+            // Optimize constants
+            symbol.setInitialValue((Const) value);
+            return new ParserVal(this.theProgram.createNoOpInst());
         } else {
-            symbol.setLastAssignment(inst);
-            return new ParserVal(inst);
+            AssignInst inst = this.theProgram.createAssignInst(symbol, value);
+            if (value instanceof ValueInst) {
+                symbol.markAsInitialized();
+                return rhs;
+            } else {
+                symbol.markAsInitialized();
+                return new ParserVal(inst);
+            }
         }
-
-        return rhs;
     }
 
     protected ParserVal id(ParserVal val) throws UndeclaredVariableException, UninitializedVariableException {
@@ -113,8 +118,7 @@ public class BaseParser {
         if (symbol == null) {
             throw new UndeclaredVariableException(token);
         }
-        Inst inst = symbol.getLastAssignment();
-        if (inst == null) {
+        if (! symbol.isInitialized()) {
             throw new UninitializedVariableException(token);
         }
         return new ParserVal(symbol);
@@ -153,7 +157,7 @@ public class BaseParser {
     }
 
     protected ParserVal printOp(ParserVal op) {
-        return new ParserVal(this.theProgram.createPrintInst((StrConst) op.obj));
+        return new ParserVal(this.theProgram.createPrintInst((Value) op.obj));
     }
 
     protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) throws SyntaxException, IncorrectArgumentTypeException {
@@ -178,7 +182,7 @@ public class BaseParser {
     protected void ifCondition(ParserVal test) {
         BranchCondition condition = (BranchCondition) test.obj;
         condition.negateOperator();
-        BranchInst branchInst = this.theProgram.createBranchInst();
+        BranchInst branchInst = this.theProgram.createBranchInst(condition);
         this.branchesStack.push(branchInst);
     }
 

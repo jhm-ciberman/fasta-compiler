@@ -1,33 +1,36 @@
 bottles {
 
     // Program to print the lyrics of the song 99 Bottles of Beer
-    // Since the language "Fasta" cannot print variables on the screen, only the text is
-    // printed without the number of bottles of beer like the original song
     // Info: https://en.wikipedia.org/wiki/99_Bottles_of_Beer
 
     INT i;
+
+    PRINT(' ===================================== \n');
+    PRINT(' **     Song: 99 bottles of Beer    ** \n');
+    PRINT(' ===================================== \n');
+    PRINT('\n');
+
     i = 99_i;
 
     LOOP
         BEGIN
         IF (i <> 1_i) THEN
             BEGIN
-            PRINT('bottles of beer on the wall');
-            PRINT('bottles of beer');
-            PRINT('Take one down, pass it around');
+            PRINT(i, ' bottles of beer on the wall\n');
+            PRINT(i, ' bottles of beer\n');
+            PRINT('Take one down, pass it around\n');
             IF (i == 2_i) THEN
-                PRINT('One bottle of beer on the wall');
+                PRINT('One bottle of beer on the wall\n\n');
             ELSE
-                PRINT('bottles of beer on the wall');
+                PRINT(i - 1_i, ' bottles of beer on the wall\n\n');
             ENDIF
-            PRINT('');
             END
         ELSE
             BEGIN
-            PRINT('One bottle of beer on the wall');
-            PRINT('One bottle of beer');
-            PRINT('Take one down, pass it around');
-            PRINT('No more bottles of beer on the wall');
+            PRINT('One bottle of beer on the wall\n');
+            PRINT('One bottle of beer\n');
+            PRINT('Take one down, pass it around\n');
+            PRINT('No more bottles of beer on the wall\n');
             END
         ENDIF
         i = i - 1_i;

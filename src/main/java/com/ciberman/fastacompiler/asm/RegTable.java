@@ -1,6 +1,7 @@
 package com.ciberman.fastacompiler.asm;
 
 import com.ciberman.fastacompiler.ir.Value;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -12,16 +13,10 @@ public class RegTable {
     private final Map<Value, RegLocation> valueRegMap = new HashMap<>();
     private final Queue<RegLocation> emptyRegLocations = new ArrayDeque<>();
 
-    public final RegLocation REG_AX = new RegLocation(this,  "eax", "ax");
-    public final RegLocation REG_BX = new RegLocation(this,  "ebx", "bx");
-    public final RegLocation REG_CX = new RegLocation(this,  "ecx", "cx");
-    public final RegLocation REG_DX = new RegLocation(this,  "edx", "dx");
-
-    public RegTable() {
-        this.emptyRegLocations.add(this.REG_AX);
-        this.emptyRegLocations.add(this.REG_BX);
-        this.emptyRegLocations.add(this.REG_CX);
-        this.emptyRegLocations.add(this.REG_DX);
+    public RegLocation createReg(String name32, String name16) {
+        RegLocation location = new RegLocation(this, name32, name16);
+        this.emptyRegLocations.add(location);
+        return location;
     }
 
     public @Nullable RegLocation requestReg(Value value) {
@@ -32,15 +27,28 @@ public class RegTable {
         return reg;
     }
 
-    public void freeReg(RegLocation regLocation) {
-        this.valueRegMap.remove(regLocation.getContent());
+    public @Nullable RegLocation findReg(Value value) {
+        RegLocation regLocation = this.valueRegMap.get(value);
+        this.emptyRegLocations.remove(regLocation);
+        return regLocation;
     }
 
-    public @Nullable RegLocation findLocation(Value value) {
-        return this.valueRegMap.get(value);
+    public void updateRegContent(@NotNull RegLocation regLocation, @Nullable Value oldValue, @Nullable Value value) {
+
+        if (oldValue != null) {
+            this.valueRegMap.remove(oldValue);
+        }
+
+        if (value != null) {
+            this.valueRegMap.put(value, regLocation);
+            this.emptyRegLocations.remove(regLocation);
+        } else {
+            this.valueRegMap.remove(value, regLocation);
+            this.emptyRegLocations.add(regLocation);
+        }
     }
 
-    public void updateLocation(RegLocation regLocation, Value value) {
-        this.valueRegMap.put(value, regLocation);
+    public Iterable<RegLocation> getAvaiableRegisters() {
+        return this.emptyRegLocations;
     }
 }

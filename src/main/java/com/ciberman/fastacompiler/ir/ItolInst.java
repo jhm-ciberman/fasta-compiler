@@ -10,4 +10,9 @@ public class ItolInst extends UnaryInstr {
     public void accept(IRVisitor visitor) {
         visitor.itolInst(this);
     }
+
+    @Override
+    public ValueType getType() {
+        return ValueType.LONG;
+    }
 }

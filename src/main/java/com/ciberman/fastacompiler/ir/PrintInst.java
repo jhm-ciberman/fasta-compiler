@@ -1,10 +1,10 @@
 package com.ciberman.fastacompiler.ir;
 
 public class PrintInst extends Inst {
-    private final StrConst string;
+    private final Value value;
 
-    public PrintInst(StrConst string) {
-        this.string = string;
+    public PrintInst(Value value) {
+        this.value = value;
     }
 
     @Override
@@ -12,7 +12,7 @@ public class PrintInst extends Inst {
         visitor.printInst(this);
     }
 
-    public StrConst getString() {
-        return this.string;
+    public Value getValue() {
+        return this.value;
     }
 }

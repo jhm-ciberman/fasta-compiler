@@ -3,7 +3,7 @@ package com.ciberman.fastacompiler.ir;
 import com.ciberman.fastacompiler.out.IRValueStringConverter;
 import org.jetbrains.annotations.NotNull;
 
-public class StrConst implements Value, Const {
+public class StrConst extends Const {
     @NotNull private final String value;
 
     public StrConst(@NotNull String value) {
@@ -37,5 +37,10 @@ public class StrConst implements Value, Const {
     @Override
     public String toPrintableString(IRValueStringConverter valueVisitor) {
         return valueVisitor.getStrConstString(this);
+    }
+
+    @Override
+    public String getValueDebugString() {
+        return "'" + this.getValue() + "'";
     }
 }

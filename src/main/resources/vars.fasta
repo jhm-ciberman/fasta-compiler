@@ -2,9 +2,5 @@ vars {
     INT a;
     LONG b;
 
-    INT c, d, e;
-    LONG f, g, h;
-
     a = 2_i + 3_i;
-    b = 5_l * 10_l + 3_i;
 }

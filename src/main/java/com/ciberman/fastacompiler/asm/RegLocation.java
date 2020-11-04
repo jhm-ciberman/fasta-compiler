@@ -33,16 +33,20 @@ class RegLocation implements Location {
 
     @Override
     public void setContent(@NotNull Value content) {
+        this.table.updateRegContent(this, this.content, content);
         this.content = content;
-        this.table.updateLocation(this, content);
     }
 
-    public void free() {
+    public void markAsFree() {
+        this.table.updateRegContent(this, this.content, null);
         this.content = null;
-        this.table.freeReg(this);
     }
 
-    public Value getContent() {
+    public @Nullable Value getContent() {
         return this.content;
+    }
+
+    public String toString() {
+        return this.getName();
     }
 }

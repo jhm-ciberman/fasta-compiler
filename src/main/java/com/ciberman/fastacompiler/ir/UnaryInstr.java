@@ -2,7 +2,7 @@ package com.ciberman.fastacompiler.ir;
 
 import com.ciberman.fastacompiler.out.IRValueStringConverter;
 
-public abstract class UnaryInstr extends Inst implements Value {
+public abstract class UnaryInstr extends ValueInst {
 
     protected Value op;
 

@@ -139,7 +139,7 @@ public class IRProgram {
      * @param op The operand
      * @return The newly created instruction
      */
-    public PrintInst createPrintInst(StrConst op) {
+    public PrintInst createPrintInst(Value op) {
         return this.pushInstr(new PrintInst(op));
     }
 

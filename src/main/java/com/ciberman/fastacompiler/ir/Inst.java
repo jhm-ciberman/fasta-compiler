@@ -13,4 +13,9 @@ public abstract class Inst {
     }
 
     public abstract void accept(IRVisitor visitor);
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }

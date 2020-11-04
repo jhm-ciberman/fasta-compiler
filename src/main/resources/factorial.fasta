@@ -3,13 +3,13 @@ factorial {
     LONG i, result, n;
 
     // Factorial of 10;
-    n = 10;
+    n = 10_l;
 
     // Initialize the result in 1
     result = 1_l;
 
     // Initialize the counter in 2
-    i = 2_i;
+    i = 2_l;
 
     IF (i < n) THEN
         BEGIN
@@ -18,8 +18,13 @@ factorial {
             result = result * i;
             i = i + 1_l;
             END
-        UNTIL (i < n)
+        UNTIL (i > n)
         END
     ENDIF
+
+    PRINT('El factorial de ');
+    PRINT(n);
+    PRINT(' es ');
+    PRINT(result);
 
 }
