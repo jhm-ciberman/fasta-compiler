@@ -38,7 +38,7 @@ public class Main {
         debugOutput.printSymbolTable(program);
 
         IntelAsmOutput masmOutput = new IntelAsmOutput();
-        masmOutput.generate(program, "asm/test.asm");
+        masmOutput.generate(program, input.outputPath);
 
     }
 }

@@ -25,10 +25,11 @@ Additionally you can pass the following arguments:
 
 ```
 usage: fasta-compiler [options] inputfile
- -d,--demo <arg>    Loads a built-in demo file. Values: "99bottles", "basic",
-                    "factorial", "if", "loop", "syntax", "vars".
+ -d,--demo <arg>    Loads a built-in demo file. Values: "99bottles",
+                    "basic", "factorial", "if", "loop", "syntax", "vars".
  -l,--lexer <arg>   Select the lexer implementation. Values: "functional",
                     "matrix". (Default is "matrix")
+ -o,--out <arg>     Specify the output assambly file
 ```
 
 

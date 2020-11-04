@@ -13,6 +13,7 @@ public class FastaCliParser {
 
     public static class FastaCommandConfig {
         public InputSource inputSource;
+        public String outputPath;
         public Automata automataImpl;
     }
 
@@ -29,6 +30,10 @@ public class FastaCliParser {
         Option demoOption = new Option("d", "demo", true, "Loads a built-in demo file. Values: \"99bottles\", \"basic\", \"factorial\", \"if\", \"loop\", \"syntax\", \"vars\".");
         demoOption.setRequired(false);
         this.options.addOption(demoOption);
+
+        Option outOption = new Option("o", "out", true, "Specify the output assambly file");
+        outOption.setRequired(false);
+        this.options.addOption(outOption);
 
         this.cliParser = new DefaultParser();
     }
@@ -50,15 +55,20 @@ public class FastaCliParser {
             String fileName = cmd.getOptionValue("demo") + ".fasta";
             InputStream stream = Main.class.getClassLoader().getResourceAsStream(fileName);
             config.inputSource = new InputSource(stream, fileName);
-
+            config.outputPath = cmd.getOptionValue("demo") + ".asm";
         } else {
             String[] inputArgs = cmd.getArgs();
             if (inputArgs.length > 0) {
                 config.inputSource = new InputSource(new FileInputStream(inputArgs[0]), inputArgs[0]);
+                config.outputPath = inputArgs[0] + ".asm";
             } else {
                 this.printHelpAndExit();
                 return null;
             }
+        }
+
+        if (cmd.hasOption("out")) {
+            config.outputPath = cmd.getOptionValue("out");
         }
 
         return config;
