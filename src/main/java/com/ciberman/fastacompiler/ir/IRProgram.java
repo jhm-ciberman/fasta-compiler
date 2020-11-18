@@ -165,10 +165,14 @@ public class IRProgram {
         return this.createBranchInst(branchCondition, null);
     }
 
-    public BranchInst createBranchInst() {
-        BranchInst branchInst = new BranchInst(null);
+    public BranchInst createBranchInst(@Nullable Inst target) {
+        BranchInst branchInst = new BranchInst(target);
         this.branchesList.add(branchInst);
         return this.pushInstr(branchInst);
+    }
+
+    public BranchInst createBranchInst() {
+        return this.createBranchInst((Inst) null);
     }
 
     public AssignInst createAssignInst(Symbol symbol, Value value) {

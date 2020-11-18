@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.asm;
 
+import com.ciberman.fastacompiler.asm.labels.Label;
 import com.ciberman.fastacompiler.asm.mem.MemLocation;
 import com.ciberman.fastacompiler.asm.reg.RegLocation;
 import com.ciberman.fastacompiler.ir.*;
@@ -10,12 +11,9 @@ class AsmVisitor implements IRVisitor {
     private final AsmBuilder builder;
     private final LocationResolver resolver;
 
-    private final LabelsTable labelsTable;
-
-    public AsmVisitor(AsmBuilder asmBuilder, LocationResolver resolver, LabelsTable labelsTable) {
+    public AsmVisitor(AsmBuilder asmBuilder, LocationResolver resolver) {
         this.builder = asmBuilder;
         this.resolver = resolver;
-        this.labelsTable = labelsTable;
     }
 
     public AsmBuilder getBuilder() {
@@ -24,7 +22,7 @@ class AsmVisitor implements IRVisitor {
 
     public void processInstr(Inst instr) {
         if (instr.isLeader()) {
-            this.builder.addLabel(this.labelsTable.get(instr));
+            this.builder.addLabel(this.resolver.getLabel(instr));
         }
         instr.accept(this);
     }
@@ -118,14 +116,14 @@ class AsmVisitor implements IRVisitor {
         switch (value.getType()) {
             case LONG:  this.builder.addPrintLong(this.resolver.location(value)); break;
             case INT:   this.builder.addPrintInt(this.resolver.location(value)); break;
-            case STR:   this.builder.addPrintStr(this.resolver.memLocation(value)); break;
+            case STR:   this.builder.addPrintStr(this.resolver.memLocationOrNew(value)); break;
         }
     }
 
     @Override
     public void branchInst(BranchInst instr) {
         BranchCondition condition = instr.getCondition();
-        String label = this.labelsTable.get(instr.getTarget());
+        Label label = this.resolver.getLabel(instr.getTarget());
         if (condition == null) {
             this.builder.addUnconditionalJump(label);
         } else {
@@ -142,7 +140,7 @@ class AsmVisitor implements IRVisitor {
 
     @Override
     public void assignInst(AssignInst instr) {
-        MemLocation dst = this.resolver.memLocation(instr.getSymbol());
+        MemLocation dst = this.resolver.memLocationOrNew(instr.getSymbol());
         RegLocation src = this.builder.moveToReg(instr.getOp());
         this.builder.addMov(instr, dst, src);
     }

@@ -16,6 +16,7 @@ public class AsmNegTest extends AsmBase {
         this.assertAsmEqual(new AsmCode[] {
                 new AsmOp("mov", ax, resolver.saveInMem(a)),
                 new AsmOp("neg", ax),
+                new AsmOp("ret"),
         });
     }
 
@@ -27,6 +28,7 @@ public class AsmNegTest extends AsmBase {
 
         this.assertAsmEqual(new AsmCode[] {
                 new AsmOp("neg", ax),
+                new AsmOp("ret"),
         });
     }
 

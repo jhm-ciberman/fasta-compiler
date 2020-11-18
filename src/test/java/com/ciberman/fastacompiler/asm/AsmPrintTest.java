@@ -18,25 +18,27 @@ public class AsmPrintTest extends AsmBase {
 
         this.assertAsmEqual(new AsmCode[] {
                 new AsmPrint(resolver.saveInMem(a)),
+                new AsmOp("ret"),
         });
     }
 
     @Test
     void printInstLong() {
         LongConst a = new LongConst(5);
-        MemLocation format = generator.getBuilder().getFormatDecimalMemLocation();
 
         program.createPrintInst(a);
 
+        MemLocation format = resolver.memLocationOrNew(Runtime.STR_FORMAT_DECIMAL);
         this.assertAsmEqual(new AsmCode[] {
                 new AsmPrint(format, resolver.saveInMem(a)),
+                new AsmOp("ret"),
         });
     }
 
     @Test
     void printInstInt() {
         IntConst a = new IntConst(5);
-        MemLocation format = generator.getBuilder().getFormatDecimalMemLocation();
+        MemLocation format = resolver.memLocationOrNew(Runtime.STR_FORMAT_DECIMAL);
 
         program.createPrintInst(a);
 
@@ -44,6 +46,7 @@ public class AsmPrintTest extends AsmBase {
                 new AsmOp("mov", resolver.REG_AX.loc16(), resolver.saveInMem(a)),
                 new AsmOp("cwde"),
                 new AsmPrint(format, resolver.REG_AX.loc32()),
+                new AsmOp("ret"),
         });
     }
 }

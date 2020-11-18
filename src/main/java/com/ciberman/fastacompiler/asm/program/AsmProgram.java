@@ -1,7 +1,7 @@
 package com.ciberman.fastacompiler.asm.program;
 
-import com.ciberman.fastacompiler.asm.LabelsTable;
 import com.ciberman.fastacompiler.asm.Location;
+import com.ciberman.fastacompiler.asm.labels.Label;
 import com.ciberman.fastacompiler.asm.mem.MemDeclaration;
 import com.ciberman.fastacompiler.asm.mem.MemLocation;
 
@@ -12,10 +12,6 @@ public class AsmProgram {
 
     private final List<MemDeclaration> dataSegment = new LinkedList<>();
     private final List<AsmCode> codeSegment = new LinkedList<>();
-
-    private boolean useDivisionByZeroErrorLabel = false;
-
-    private boolean useOverflowErrorLabel = false;
 
     public void addCode(String type, Location loc1, Location loc2) {
         this.codeSegment.add(new AsmOp(type, loc1, loc2));
@@ -33,7 +29,7 @@ public class AsmProgram {
         this.dataSegment.add(data);
     }
 
-    public void addLabel(String label) {
+    public void addLabel(Label label) {
         this.codeSegment.add(new AsmLabel(label));
     }
 
@@ -45,7 +41,7 @@ public class AsmProgram {
         this.codeSegment.add(new AsmPrint(formatLoc, valueLoc));
     }
 
-    public void addJump(String jumpType, String label) {
+    public void addJump(String jumpType, Label label) {
         this.codeSegment.add(new AsmJump(jumpType, label));
     }
 
@@ -71,23 +67,4 @@ public class AsmProgram {
             System.out.println(code);
         }
     }
-
-    public boolean usesDivisionByZeroErrorLabel() {
-        return useDivisionByZeroErrorLabel;
-    }
-
-    public boolean usesOverflowErrorLabel() {
-        return useOverflowErrorLabel;
-    }
-
-    public String getDivisionByZeroErrorLabel() {
-        this.useDivisionByZeroErrorLabel = true;
-        return LabelsTable.LABEL_DIVISION_BY_ZERO;
-    }
-
-    public String getOverflowErrorLabel() {
-        this.useOverflowErrorLabel = true;
-        return LabelsTable.LABEL_OVERFLOW;
-    }
-
 }

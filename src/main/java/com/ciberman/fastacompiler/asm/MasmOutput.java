@@ -24,27 +24,10 @@ public class MasmOutput implements AsmVisitor {
         for (MemDeclaration memDeclaration : asm.getDataSegment()) {
             writer.write(this.indent +  memDeclaration.toString() + '\n');
         }
-        if (asm.usesDivisionByZeroErrorLabel()) {
-            writer.write(this.indent + "@div_by_zero_error db 'ERROR: Division by zero.', 10, 0\n");
-        }
-        if (asm.usesOverflowErrorLabel()) {
-            writer.write(this.indent + "@overflow_error db 'ERROR: Overflow in addition.', 10, 0\n");
-        }
         writer.write(".code\n");
         writer.write("start:\n");
         for (AsmCode codeSegment : asm.getCodeSegment()) {
             codeSegment.accept(this);
-        }
-        writer.write(this.indent + "ret\n");
-        if (asm.usesDivisionByZeroErrorLabel()) {
-            writer.write(LabelsTable.LABEL_DIVISION_BY_ZERO + ":\n");
-            writer.write(this.indent + "invoke crt_printf,addr @div_by_zero_error\n");
-            writer.write(this.indent + "ret\n");
-        }
-        if (asm.usesOverflowErrorLabel()) {
-            writer.write(LabelsTable.LABEL_OVERFLOW + ":\n");
-            writer.write(this.indent + "invoke crt_printf,addr @overflow_error\n");
-            writer.write(this.indent + "ret\n");
         }
         writer.write("end start\n");
         writer.close();

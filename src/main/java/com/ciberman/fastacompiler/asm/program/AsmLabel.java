@@ -1,13 +1,15 @@
 package com.ciberman.fastacompiler.asm.program;
 
+import com.ciberman.fastacompiler.asm.labels.Label;
+
 import java.io.IOException;
 
 public class AsmLabel implements AsmCode {
 
     public String label;
 
-    public AsmLabel(String label) {
-        this.label = label;
+    public AsmLabel(Label label) {
+        this.label = label.getLabel();
     }
 
     public String getLabel() {

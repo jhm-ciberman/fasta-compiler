@@ -40,9 +40,9 @@ public class MemDeclaration implements IRValueStringConverter {
         String str = strConst.getValue();
         if (str.isEmpty()) return "0";
 
-        str = str.replace("'", "\\'")
-                .replaceAll("\\\\n", "', 10, '")
-                .replace("\\", "\\\\");
+        str = str.replace("'", "\\'");
+        str = str.replaceAll("\\\\n", "', 10, '");
+        str = str.replace("\\", "\\\\");
 
         str = "'" + str + "', 0";
         str = str.replaceAll("'', ", "");

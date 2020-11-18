@@ -1,5 +1,7 @@
 package com.ciberman.fastacompiler.asm.program;
 
+import com.ciberman.fastacompiler.asm.labels.Label;
+
 import java.io.IOException;
 
 public class AsmJump implements AsmCode {
@@ -7,9 +9,9 @@ public class AsmJump implements AsmCode {
     private final String jumpType;
     private final String label;
 
-    public AsmJump(String jumpType, String label) {
+    public AsmJump(String jumpType, Label label) {
         this.jumpType = jumpType;
-        this.label = label;
+        this.label = label.getLabel();
     }
 
     public String getJumpType() {

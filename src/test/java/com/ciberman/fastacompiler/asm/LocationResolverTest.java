@@ -51,7 +51,7 @@ class LocationResolverTest {
     @Test
     void memLocationShouldCreateANewLocationWhenTheValueIsNotPresent() {
         LocationResolver locationResolver = new LocationResolver();
-        Location location = locationResolver.memLocation(new IntConst(100));
+        Location location = locationResolver.memLocationOrNew(new IntConst(100));
         Assertions.assertEquals(ConstMemLocation.class, location.getClass());
     }
 }

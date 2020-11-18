@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.asm;
 
+import com.ciberman.fastacompiler.asm.labels.Label;
 import com.ciberman.fastacompiler.asm.mem.MemDeclaration;
 import com.ciberman.fastacompiler.asm.mem.MemLocation;
 import com.ciberman.fastacompiler.asm.program.AsmProgram;
@@ -9,10 +10,8 @@ import com.ciberman.fastacompiler.ir.*;
 import org.jetbrains.annotations.NotNull;
 
 public class AsmBuilder {
-
     private final AsmProgram asm;
     private final LocationResolver resolver;
-    private final StrConst formatDecimal = new StrConst("%d");
 
     public AsmBuilder(LocationResolver resolver) {
         this.asm = new AsmProgram();
@@ -27,7 +26,22 @@ public class AsmBuilder {
         for (MemLocation location : this.resolver.getMemLocations()) {
             this.asm.addData(new MemDeclaration(location));
         }
+
+        this.asm.addCode("ret");
+        this.addErrorSection(Runtime.LABEL_DIVISION_BY_ZERO, Runtime.STR_ERROR_DIVISION_BY_ZERO);
+        this.addErrorSection(Runtime.LABEL_OVERFLOW, Runtime.STR_ERROR_OVERFLOW);
         return this.asm;
+    }
+
+    private void addErrorSection(String labelName, StrConst errorString) {
+        Label label = this.resolver.getLabel(labelName);
+        if (label != null) {
+            MemLocation location = this.resolver.memLocationOrNew(errorString);
+            this.asm.addData(new MemDeclaration(location));
+            this.asm.addLabel(label);
+            this.asm.addPrint(location);
+            this.asm.addCode("ret");
+        }
     }
 
     /**
@@ -39,7 +53,20 @@ public class AsmBuilder {
     public void addAdd(AddInst instr, Location left, Location right) {
         this.asm.addCode("add", left, right);
         left.setContent(instr);
-        this.asm.addJump("jo", this.asm.getOverflowErrorLabel());
+        this.asm.addJump("jo", this.getLabelOrNew(Runtime.LABEL_OVERFLOW));
+    }
+
+    /**
+     * Finds a label or creates a new one
+     * @param name The label name
+     * @return The label
+     */
+    private Label getLabelOrNew(String name) {
+        Label label = this.resolver.getLabel(name);
+        if (label == null) {
+            return this.resolver.addLabel(name);
+        }
+        return label;
     }
 
     /**
@@ -71,7 +98,7 @@ public class AsmBuilder {
      */
     public void addDiv(DivInst instr, Location right) {
         this.asm.addCode("test", right, right);
-        this.asm.addJump("jz", this.asm.getDivisionByZeroErrorLabel());
+        this.asm.addJump("jz", this.getLabelOrNew(Runtime.LABEL_DIVISION_BY_ZERO));
         if (right.getContent().getType() == ValueType.INT) {
             this.asm.addCode("cwd");
         } else {
@@ -126,10 +153,6 @@ public class AsmBuilder {
         this.spillRegIfNecessary(this.resolver.REG_DX);
     }
 
-    public MemLocation getFormatDecimalMemLocation() {
-        return this.resolver.memLocation(this.formatDecimal);
-    }
-
     /**
      * Inserts a print integer instruction.
      * @param location The location of the integer param
@@ -137,7 +160,7 @@ public class AsmBuilder {
     public void addPrintInt(Location location) {
         this.preserveVolatileRegisters();
         this.moveToReg(location.getContent(), this.resolver.REG_AX);
-        MemLocation format = this.getFormatDecimalMemLocation();
+        MemLocation format = this.resolver.memLocationOrNew(Runtime.STR_FORMAT_DECIMAL);
         this.asm.addCode("cwde");
         this.asm.addPrint(format, this.resolver.REG_AX.loc32());
         this.resolver.REG_AX.markAsFree();
@@ -150,7 +173,7 @@ public class AsmBuilder {
      */
     public void addPrintLong(Location location) {
         this.preserveVolatileRegisters();
-        MemLocation format = this.getFormatDecimalMemLocation();
+        MemLocation format = this.resolver.memLocationOrNew(Runtime.STR_FORMAT_DECIMAL);
         this.asm.addPrint(format, location);
         location.markAsFree();
     }
@@ -178,7 +201,7 @@ public class AsmBuilder {
      * Inserts a target label in the code segment.
      * @param label The label to insert
      */
-    public void addLabel(String label) {
+    public void addLabel(Label label) {
         this.asm.addLabel(label);
     }
 
@@ -189,7 +212,7 @@ public class AsmBuilder {
      * @param loc2 The right hand side register location
      * @param label The target jump label
      */
-    public void addConditionalJump(@NotNull BranchCondition.RelOperator operator, RegLocation loc1, RegLocation loc2, String label) {
+    public void addConditionalJump(@NotNull BranchCondition.RelOperator operator, RegLocation loc1, RegLocation loc2, Label label) {
         this.asm.addCode("cmp", loc1, loc2);
         loc1.markAsFree();
         loc2.markAsFree();
@@ -201,7 +224,7 @@ public class AsmBuilder {
      * Inserts an unconditional jump.
      * @param label The target label
      */
-    public void addUnconditionalJump(String label) {
+    public void addUnconditionalJump(Label label) {
         this.asm.addJump("jmp", label);
     }
 
@@ -283,7 +306,7 @@ public class AsmBuilder {
         Value content = reg.getContent();
         if (content == null) return;
 
-        MemLocation memLocation = this.resolver.memLocation(content);
+        MemLocation memLocation = this.resolver.memLocationOrNew(content);
         RegLocation regLocation = reg.getCurrentLocation();
         this.asm.addCode("mov", memLocation, regLocation);
         assert regLocation != null;

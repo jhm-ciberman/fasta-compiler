@@ -18,6 +18,7 @@ public class AsmItolTest extends AsmBase {
 
         this.assertAsmEqual(new AsmCode[] {
                 new AsmOp("cwde"),
+                new AsmOp("ret"),
         });
     }
 
@@ -31,6 +32,7 @@ public class AsmItolTest extends AsmBase {
         this.assertAsmEqual(new AsmCode[] {
                 new AsmOp("mov", resolver.REG_AX.loc16(), bx),
                 new AsmOp("cwde"),
+                new AsmOp("ret"),
         });
     }
 
@@ -44,6 +46,7 @@ public class AsmItolTest extends AsmBase {
         this.assertAsmEqual(new AsmCode[] {
                 new AsmOp("mov", resolver.REG_AX.loc16(), memLocation),
                 new AsmOp("cwde"),
+                new AsmOp("ret"),
         });
     }
 

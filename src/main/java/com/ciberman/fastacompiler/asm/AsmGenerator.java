@@ -24,25 +24,19 @@ public class AsmGenerator {
     }
 
     public AsmProgram generate(IRProgram program) {
-        LabelsTable labelsTable = this.initLabelsTable(program);
+        AsmVisitor visitor = new AsmVisitor(this.builder, this.resolver);
 
-        AsmVisitor visitor = new AsmVisitor(this.builder, this.resolver, labelsTable);
+        for (BranchInst branch : program.branches()) {
+            Inst target = branch.getTarget();
+            if (target != null) {
+                this.resolver.addLabel(target);
+            }
+        }
+
         for (Inst instr : program.instructions()) {
             visitor.processInstr(instr);
         }
 
         return builder.build();
     }
-
-    private LabelsTable initLabelsTable(IRProgram program) {
-        LabelsTable labelsTable = new LabelsTable();
-        for (BranchInst branch : program.branches()) {
-            Inst target = branch.getTarget();
-            if (target != null) {
-                labelsTable.addLabel(target);
-            }
-        }
-        return labelsTable;
-    }
-
 }
