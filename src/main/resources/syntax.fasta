@@ -1,12 +1,39 @@
-// This file should be lexically correct, but it should have syntax errors
+// This file should be lexically correct, but it should have syntax errors.
+// This should be the output:
+// ERROR syntax.fasta (Line 14:22) Unexpected token "ASSIGN (268)". syntax error
+// ERROR syntax.fasta (Line 17:15) Unexpected token "COMMA (269)". syntax error
+// ERROR syntax.fasta (Line 19:9) Unexpected token "SEMI (270)". syntax error
+// ERROR syntax.fasta (Line 26:18) Unexpected token "STR (277)". syntax error
+// ERROR syntax.fasta (Line 31:26) Unexpected token "SEMI (270)". syntax error
+// ERROR syntax.fasta (Line 34:16) Unexpected token "ID (257)". syntax error
+// ERROR syntax.fasta (Line 44:10) Unexpected token "TYPE_LONG (286)". syntax error
+// ERROR syntax.fasta (Line 47:14) Unexpected token "STR (277)". syntax error
+// ERROR syntax.fasta (Line 50:14) Unexpected token "STR (277)". syntax error
 
 syntax {
-    INT mynumber = 6_i; // This is my number
+    INT mynumber = 6_i;    // Invalid
+    LONG b;                // Valid
+    INT a;                 // Valid
+    mynumber, b;           // Invalid
+    a = 52_i;              // Valid
+    aa;                    // Invalid
+    aslalsa < 52_i;        // Invalid (Should not report, because previous line is also invalid)
+    PRINT(a);              // Valid
 
-    IF (1_i + 2_i >= alfa) THEN
-        PRINT 'Condition is true 😎';
+
+    IF (1_i + 2_i >= a) THEN               // Valid
+    BEGIN                                  // Valid
+        PRINT 'Condition is false';        // Invalid
+    END
     ELSE
-        PRINT 'Condition is false 👿';
+    BEGIN
+        a = 2_i + 2_i;
+        this_is_invalid;                   // Invalid
+        PRINT 'Condition is true';         // Invalid
+        a = a + 52_i * 2_i;                // Valid
+        this is also invalid;              // Invalid
+        b = 58_l;                          // Valid
+    END
     ENDIF
 
     #
@@ -14,11 +41,12 @@ syntax {
     Random unicode characters should be skipped too: 汉字
     #
 
-    LONG mylong = (6522_l / 56522_l) * 2_l + 5_i;
+    LONG mylong;                             // Invalid
+    b = 6522_l / 56522_l * 2_l + ITOL(5_i);  // Valid
 
-    PRINT 'My long is '
-    PRINT mylong;
+    PRINT 'My long is ';      // Invalid
+    PRINT(a);                 // Valid
 
-    PRINT 'FastaCompiler supports unicode! 🐠'
-    PRINT 'Love in japanese is 愛'
+    PRINT 'Hello world'       // Invalid
+    PRINT('Valid')            // Invalid
 }

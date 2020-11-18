@@ -5,22 +5,28 @@ import org.jetbrains.annotations.Nullable;
 
 public class Token {
 
-    private final InputSource inputSource;
     private final TokenType type;
     private final String value;
-    private final int line;
-    private final int col;
+    private final FileLocation fileLocation;
 
     public Token(LexerContext ctx, TokenType type) {
         this(ctx, type, null);
     }
 
     public Token(LexerContext ctx, TokenType type, @Nullable String value) {
-        this.inputSource = ctx.getInputSource();
+        this(new FileLocation(ctx.getInputSource(), ctx.line(), ctx.col()), type, value);
+    }
+
+    public Token(FileLocation location, TokenType type) {
+        this.fileLocation = location;
+        this.type = type;
+        this.value = null;
+    }
+
+    public Token(FileLocation location, TokenType type, @Nullable String value) {
+        this.fileLocation = location;
         this.type = type;
         this.value = value;
-        this.line = ctx.line();
-        this.col = ctx.col();
     }
 
     public int code()
@@ -37,15 +43,15 @@ public class Token {
     }
 
     public int getLine() {
-        return this.line;
+        return this.fileLocation.getLine();
     }
 
     public int getCol() {
-        return (value != null) ? this.col - this.value.length() : this.col;
+        return (value != null) ? this.fileLocation.getCol() - this.value.length() : this.fileLocation.getCol();
     }
 
     public InputSource getInputSource() {
-        return this.inputSource;
+        return this.fileLocation.getInputSource();
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.io.InputStream;
 public class FastaCliParser {
 
     public static class FastaCommandConfig {
-        public InputSource inputSource;
+        public FileInputSource inputSource;
         public String outputPath;
         public Automata automataImpl;
     }
@@ -54,12 +54,12 @@ public class FastaCliParser {
         if (cmd.hasOption("demo")) {
             String fileName = cmd.getOptionValue("demo") + ".fasta";
             InputStream stream = Main.class.getClassLoader().getResourceAsStream(fileName);
-            config.inputSource = new InputSource(stream, fileName);
+            config.inputSource = new FileInputSource(stream, fileName);
             config.outputPath = cmd.getOptionValue("demo") + ".asm";
         } else {
             String[] inputArgs = cmd.getArgs();
             if (inputArgs.length > 0) {
-                config.inputSource = new InputSource(new FileInputStream(inputArgs[0]), inputArgs[0]);
+                config.inputSource = new FileInputSource(new FileInputStream(inputArgs[0]), inputArgs[0]);
                 config.outputPath = inputArgs[0] + ".asm";
             } else {
                 this.printHelpAndExit();

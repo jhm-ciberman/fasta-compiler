@@ -10,4 +10,19 @@ public class SilentLogger implements Logger {
     public void error(Exception error) {
         // nothing
     }
+
+    @Override
+    public int getErrorCount() {
+        return 0;
+    }
+
+    @Override
+    public int getWarnCount() {
+        return 0;
+    }
+
+    @Override
+    public void flush() {
+        // nothing
+    }
 }

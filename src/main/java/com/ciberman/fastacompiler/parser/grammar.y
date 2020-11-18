@@ -5,6 +5,8 @@ import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.Token;
+import com.ciberman.fastacompiler.ir.IRProgram;
+import com.ciberman.fastacompiler.Fasta;
 import java.io.IOException;
 %}
 
@@ -75,10 +77,10 @@ scope_body
 	| scope_statement_list
 
 scope_statement_list
-	: statement
-	| scope
-	| statement scope_statement_list
+	: statement scope_statement_list
 	| scope scope_statement_list
+	| statement
+	| scope
 
 
 /**
@@ -93,8 +95,8 @@ block
 	| statement
 
 block_statement_list
-	: statement
-	| statement block_statement_list
+	: statement block_statement_list
+	| statement
 
 /**
  * ----------------------------------------------------------------
@@ -107,16 +109,18 @@ block_statement_list
  */
 
 var_declaration_list
-	: var_declaration
-	| var_declaration var_declaration_list
+	: var_declaration var_declaration_list
+	| var_declaration
 
 var_declaration
 	: TYPE_INT var_list SEMI                { this.declareIntSymbols($2); }
 	| TYPE_LONG var_list SEMI               { this.declareLongSymbols($2); }
+	| TYPE_INT error SEMI
+	| TYPE_LONG error SEMI
 
 var_list
-	: ID                                    { $$ = this.newIdList($1); }
-	| ID COMMA var_list                     { $$ = this.pushIdToList($3, $1); }
+	: ID COMMA var_list                     { $$ = this.pushIdToList($3, $1); }
+	| ID                                    { $$ = this.newIdList($1); }
 
 /**
  * ----------------------------------------------------------------
@@ -136,9 +140,10 @@ statement
         | loop_statement
         | print_statement
         | assign_statement
+        | error SEMI
 
 if_statement
-	: IF if_condition if_body ENDIF                                 { this.ifInst(); }
+	: IF if_condition if_body                                      { this.ifInst(); }
 	| IF if_error_condition
 
 if_error_condition
@@ -147,8 +152,13 @@ if_error_condition
 	| LPAREN expr RPAREN                                            { this.errorIfWithoutRelationalOperator(); }
 
 if_body
-	: THEN block
-	| THEN if_then_block ELSE block
+	: THEN block ENDIF
+	| THEN if_then_block else_body
+	| THEN error ENDIF
+
+else_body
+	: ELSE block ENDIF
+	| ELSE error ENDIF
 
 if_then_block
 	: block                                                         { this.ifThenBlock(); }
@@ -245,6 +255,11 @@ protected int yylex() throws IOException, LexicalException {
 	return token.getType().code();
 }
 
-public void parse() throws IOException, FastaException {
-	this.yyparse();
+public IRProgram parse() throws IOException, FastaException {
+	try {
+		this.yyparse();
+	} catch (Exception e) {
+		Fasta.getLogger().error(e);
+	}
+	return this.getProgram();
 }

@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.parser;
 
+import com.ciberman.fastacompiler.Fasta;
 import com.ciberman.fastacompiler.errors.*;
 import com.ciberman.fastacompiler.ir.*;
 import com.ciberman.fastacompiler.lexer.Lexer;
@@ -39,7 +40,7 @@ public class BaseParser {
         return this.currentToken;
     }
 
-    public IRProgram buildProgram() {
+    protected IRProgram getProgram() {
         return this.theProgram;
     }
 
@@ -227,31 +228,31 @@ public class BaseParser {
         }
     }
 
-    protected void error(String s) throws SyntaxException {
-        throw new SyntaxException(this.currentToken, s);
+    protected void error(String s) {
+        Fasta.getLogger().error(new SyntaxException(this.currentToken, s));
     }
 
-    public void errorIfWithoutParens() throws SyntaxException {
+    public void errorIfWithoutParens() {
         this.error("IF condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: IF (foo <= bar) THEN ...");
     }
 
-    public void errorIfUnclosedParens() throws SyntaxException {
+    public void errorIfUnclosedParens() {
         this.error("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: IF (foo <= bar) THEN ...");
     }
 
-    public void errorIfWithoutRelationalOperator() throws SyntaxException {
+    public void errorIfWithoutRelationalOperator() {
         this.error("IF does not have relational operator. You should add a valid relational operator. Example: IF (foo <= bar) THEN ...");
     }
 
-    public void errorLoopWithoutParens() throws SyntaxException {
+    public void errorLoopWithoutParens() {
         this.error("LOOP..WHILE condition should be enclosed in parenthesis. You should add the missing parenthesis in the condition. Example: LOOP .. WHILE (foo <= bar)");
     }
 
-    public void errorLoopUnclosedParens() throws SyntaxException {
+    public void errorLoopUnclosedParens() {
         this.error("Unclosed parenthesis in IF condition. You should close the right parenthesis in the IF condition. Example: LOOP .. WHILE (foo <= bar)");
     }
 
-    public void errorLoopWithoutRelationalOperator() throws SyntaxException {
+    public void errorLoopWithoutRelationalOperator() {
         this.error("LOOP..WHILE condition does not have relational operator. You should add a valid relational operator. Example: LOOP .. WHILE (foo <= bar)");
     }
 }

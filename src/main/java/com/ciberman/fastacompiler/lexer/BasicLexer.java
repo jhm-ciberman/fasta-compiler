@@ -1,5 +1,6 @@
 package com.ciberman.fastacompiler.lexer;
 
+import com.ciberman.fastacompiler.FileInputSource;
 import com.ciberman.fastacompiler.InputSource;
 import com.ciberman.fastacompiler.errors.LexicalException;
 
@@ -23,7 +24,7 @@ public class BasicLexer implements LexerContext, Lexer {
 
     private int currentCodePoint;
 
-    public BasicLexer(Automata automata, InputSource inputSource) {
+    public BasicLexer(Automata automata, FileInputSource inputSource) {
         this.automata = automata;
         this.inputSource = inputSource;
         this.reader = new BufferedReader(inputSource.getReader());

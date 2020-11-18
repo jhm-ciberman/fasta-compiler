@@ -1,7 +1,7 @@
 package com.ciberman.fastacompiler.lexer;
 
 import com.ciberman.fastacompiler.Fasta;
-import com.ciberman.fastacompiler.InputSource;
+import com.ciberman.fastacompiler.FileInputSource;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.logger.SilentLogger;
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +33,7 @@ abstract class LexerTest {
     public abstract Automata makeAutomata();
 
     protected Lexer makeLexer(String inputString) {
-        InputSource source = new InputSource(new StringReader(inputString), "");
+        FileInputSource source = new FileInputSource(new StringReader(inputString), "");
         return new BasicLexer(this.makeAutomata(), source);
     }
 
