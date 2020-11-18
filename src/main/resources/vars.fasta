@@ -1,6 +1,13 @@
 vars {
-    INT a;
-    LONG b;
+    INT a, b, c;
+    b = 42_i;
+    a = 3_i * 30_i / 2_i;
+    c = 100_i * b;
+    a = 2_i + a + 200_i - c;
 
-    a = 2_i + 3_i;
+    IF (a == -3953_i) THEN
+        PRINT('El valor de a es ', a);
+    ELSE
+        PRINT('NO es correcto a = ', a);
+    ENDIF
 }

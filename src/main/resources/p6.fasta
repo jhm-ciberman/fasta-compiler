@@ -1,0 +1,55 @@
+p6{
+
+    LONG x,y,z,a, b, c, d, f;
+
+    x=10_l;
+    y=20_l;
+
+    ambito{
+        LONG x,y;
+        x=200_l;
+        y=100_l;
+    }
+
+    PRINT('if else\n');
+    IF (x<y) THEN
+        PRINT('x es menor que y\n');
+    ELSE
+        PRINT('x es mayor que y\n');
+    ENDIF;
+
+    PRINT('do until\n');
+    z=3_l;
+    LOOP
+    BEGIN
+        PRINT('ciclo z=', z, '\n');
+        z=z-1_l;
+    END
+    UNTIL(z<1_l);
+
+    PRINT('if else con do until anidado\n');
+    IF(x<y) THEN
+    BEGIN
+        PRINT('x es menor que y\n');
+        z=3_l;
+        LOOP
+        BEGIN
+            PRINT('ciclo por menor\n');
+            z=z-1_l;
+        END
+        UNTIL (z<1_l);
+    END
+    ELSE
+    BEGIN
+        PRINT('x es mayor que y\n');
+        z=3_l;
+        LOOP
+        BEGIN
+            PRINT('ciclo por mayor\n');
+            z=z-1_l;
+        END
+        UNTIL(z<1_l);
+        END
+    ENDIF
+
+}

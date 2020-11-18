@@ -12,6 +12,8 @@ import java.util.Stack;
 
 public class BaseParser {
 
+    private static final boolean OPTIMIZE_CONSTANTS_INITIALIZATION = true;
+
     private static class IdList extends LinkedList<String> {
         // nothing. This class is because java do not permit to downcast an Object to a generic type.
     }
@@ -22,8 +24,10 @@ public class BaseParser {
 
     private Token currentToken;
 
-    private final Stack<BranchInst> branchesStack = new Stack<BranchInst>();
-    private final Stack<Inst> instructionStack = new Stack<Inst>();
+    private int ifStatementCount = 0;
+
+    private final Stack<BranchInst> branchesStack = new Stack<>();
+    private final Stack<Inst> instructionStack = new Stack<>();
 
     public BaseParser(Lexer lexer) {
         this.lexer = lexer;
@@ -96,20 +100,15 @@ public class BaseParser {
             throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
         }
 
-        if (value instanceof Const) {
+        if (OPTIMIZE_CONSTANTS_INITIALIZATION && value instanceof Const && this.ifStatementCount <= 0) {
             // Optimize constants
             symbol.setInitialValue((Const) value);
             return new ParserVal(this.theProgram.createNoOpInst());
-        } else {
-            AssignInst inst = this.theProgram.createAssignInst(symbol, value);
-            if (value instanceof ValueInst) {
-                symbol.markAsInitialized();
-                return rhs;
-            } else {
-                symbol.markAsInitialized();
-                return new ParserVal(inst);
-            }
         }
+
+        AssignInst inst = this.theProgram.createAssignInst(symbol, value);
+        symbol.markAsInitialized();
+        return (value instanceof ValueInst) ? rhs : new ParserVal(inst);
     }
 
     protected ParserVal id(ParserVal val) throws UndeclaredVariableException, UninitializedVariableException {
@@ -144,7 +143,7 @@ public class BaseParser {
         return new ParserVal(this.theProgram.createMulInst((Value) lhs.obj, (Value) rhs.obj));
     }
 
-    protected ParserVal negOp(ParserVal op) throws IncorrectArgumentTypeException {
+    protected ParserVal negOp(ParserVal op) {
         return new ParserVal(this.theProgram.createNegInst((Value) op.obj));
     }
 
@@ -156,8 +155,8 @@ public class BaseParser {
         return new ParserVal(this.theProgram.createItolInst(val));
     }
 
-    protected ParserVal printOp(ParserVal op) {
-        return new ParserVal(this.theProgram.createPrintInst((Value) op.obj));
+    protected void printOp(ParserVal op) {
+        this.theProgram.createPrintInst((Value) op.obj);
     }
 
     protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) throws SyntaxException, IncorrectArgumentTypeException {
@@ -170,6 +169,7 @@ public class BaseParser {
     protected void ifInst() {
         this.theProgram.createNoOpInst();
         this.branchesStack.pop().setTarget(this.theProgram.getLastInst());
+        this.ifStatementCount--;
     }
 
     protected void ifThenBlock() {
@@ -184,6 +184,7 @@ public class BaseParser {
         condition.negateOperator();
         BranchInst branchInst = this.theProgram.createBranchInst(condition);
         this.branchesStack.push(branchInst);
+        this.ifStatementCount++;
     }
 
     protected void loopKeyword() {

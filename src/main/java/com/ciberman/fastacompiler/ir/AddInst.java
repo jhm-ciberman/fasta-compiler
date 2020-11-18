@@ -1,7 +1,7 @@
 package com.ciberman.fastacompiler.ir;
 
 public class AddInst extends BinInst {
-    protected AddInst(Value op1, Value op2) {
+    public AddInst(Value op1, Value op2) {
         super(op1, op2);
     }
 

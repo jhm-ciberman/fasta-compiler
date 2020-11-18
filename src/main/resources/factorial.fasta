@@ -22,9 +22,5 @@ factorial {
         END
     ENDIF
 
-    PRINT('El factorial de ');
-    PRINT(n);
-    PRINT(' es ');
-    PRINT(result);
-
+    PRINT('El factorial de ', n, ' es ', result);
 }

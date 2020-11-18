@@ -57,4 +57,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    testImplementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
 }

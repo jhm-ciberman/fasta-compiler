@@ -54,7 +54,7 @@ public class Symbol implements Value {
         return "Symbol{" +
                 "name='" + name + '\'' +
                 ", type=" + type +
-                ", initialValue=" + initialValue.getValueDebugString() +
+                ", initialValue=" + (initialValue == null ? "null" : initialValue.getValueDebugString()) +
                 '}';
     }
 

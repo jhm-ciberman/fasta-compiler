@@ -1,5 +1,6 @@
-package com.ciberman.fastacompiler.asm;
+package com.ciberman.fastacompiler.asm.mem;
 
+import com.ciberman.fastacompiler.asm.Location;
 import com.ciberman.fastacompiler.ir.Value;
 
 public abstract class MemLocation implements Location {
@@ -37,5 +38,10 @@ public abstract class MemLocation implements Location {
 
     public String toString() {
         return this.getName();
+    }
+
+    @Override
+    public Value getContent() {
+        return this.value;
     }
 }

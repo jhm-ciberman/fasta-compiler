@@ -1,14 +1,16 @@
 package com.ciberman.fastacompiler;
 
+import com.ciberman.fastacompiler.asm.program.AsmProgram;
+import com.ciberman.fastacompiler.asm.AsmGenerator;
+import com.ciberman.fastacompiler.asm.MasmOutput;
 import com.ciberman.fastacompiler.errors.FastaException;
 import com.ciberman.fastacompiler.errors.LexicalException;
 import com.ciberman.fastacompiler.errors.SyntaxException;
-import com.ciberman.fastacompiler.ir.*;
+import com.ciberman.fastacompiler.ir.IRProgram;
 import com.ciberman.fastacompiler.lexer.BasicLexer;
 import com.ciberman.fastacompiler.lexer.Lexer;
 import com.ciberman.fastacompiler.lexer.RecoveryLexer;
 import com.ciberman.fastacompiler.out.ConsoleDebugOutput;
-import com.ciberman.fastacompiler.asm.IntelAsmOutput;
 import com.ciberman.fastacompiler.parser.Parser;
 
 import java.io.IOException;
@@ -37,8 +39,11 @@ public class Main {
         debugOutput.printProgram(program);
         debugOutput.printSymbolTable(program);
 
-        IntelAsmOutput masmOutput = new IntelAsmOutput();
-        masmOutput.generate(program, input.outputPath);
+        AsmGenerator asmGenerator = new AsmGenerator();
+        AsmProgram asm = asmGenerator.generate(program);
+        asm.printDebugString();
 
+        MasmOutput output = new MasmOutput();
+        output.generate(asm, input.outputPath);
     }
 }
