@@ -25,6 +25,8 @@ public class BaseParser {
 
     private Token currentToken;
 
+    private boolean errorRecoveryMode = false;
+
     private int ifStatementCount = 0;
 
     private final Stack<BranchInst> branchesStack = new Stack<>();
@@ -49,30 +51,50 @@ public class BaseParser {
     }
 
     protected ParserVal intConst(ParserVal val) {
-        int intConst = Integer.parseInt(this.tokenVal(val));
-        return new ParserVal(this.theProgram.addConst(intConst));
+        try {
+            int intConst = Integer.parseInt(this.tokenVal(val));
+            return new ParserVal(this.theProgram.addConst(intConst));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal longConst(ParserVal val) {
-        long longConst = Long.parseLong(this.tokenVal(val));
-        return new ParserVal(this.theProgram.addConst(longConst));
+        try {
+            long longConst = Long.parseLong(this.tokenVal(val));
+            return new ParserVal(this.theProgram.addConst(longConst));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
 
     protected ParserVal strConst(ParserVal val) {
-        return new ParserVal(this.theProgram.addConst(this.tokenVal(val)));
+        try {
+            return new ParserVal(this.theProgram.addConst(this.tokenVal(val)));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal newIdList(ParserVal val) {
-        IdList list = new IdList();
-        list.add(this.tokenVal(val));
-        return new ParserVal(list);
+        try {
+            IdList list = new IdList();
+            list.add(this.tokenVal(val));
+            return new ParserVal(list);
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal pushIdToList(ParserVal list, ParserVal id) {
-        List<String> theList = (IdList) list.obj;
-        theList.add(this.tokenVal(id));
-        return list;
+        try {
+            List<String> theList = (IdList) list.obj;
+            theList.add(this.tokenVal(id));
+            return list;
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected void declareSymbols(IdList list, ValueType type) {
@@ -82,121 +104,189 @@ public class BaseParser {
     }
 
     protected void declareIntSymbols(ParserVal list) {
-        this.declareSymbols((IdList) list.obj, ValueType.INT);
+        try {
+            this.declareSymbols((IdList) list.obj, ValueType.INT);
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void declareLongSymbols(ParserVal list) {
-        this.declareSymbols((IdList) list.obj, ValueType.LONG);
+        try {
+            this.declareSymbols((IdList) list.obj, ValueType.LONG);
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
-    protected ParserVal assignOp(ParserVal lhs, ParserVal tokenAssign, ParserVal rhs) throws UndeclaredVariableException, IncorrectArgumentTypeException {
-        Token token = (Token) lhs.obj;
-        Value value = (Value) rhs.obj;
-        Symbol symbol = this.theProgram.findSymbolByName(token.getValue());
-        if (symbol == null) {
-            throw new UndeclaredVariableException(token);
-        }
+    protected ParserVal assignOp(ParserVal lhs, ParserVal tokenAssign, ParserVal rhs) {
+        try {
+            Token token = (Token) lhs.obj;
+            Value value = (Value) rhs.obj;
+            Symbol symbol = this.theProgram.findSymbolByName(token.getValue());
+            if (symbol == null) {
+                throw new UndeclaredVariableException(token);
+            }
 
-        if (symbol.getType() != value.getType()) {
-            throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
-        }
+            if (symbol.getType() != value.getType()) {
+                throw new IncorrectArgumentTypeException((Token) tokenAssign.obj, symbol.getType(), value.getType());
+            }
 
-        if (OPTIMIZE_CONSTANTS_INITIALIZATION && value instanceof Const && this.ifStatementCount <= 0) {
-            // Optimize constants
-            symbol.setInitialValue((Const) value);
-            return new ParserVal(this.theProgram.createNoOpInst());
-        }
+            if (OPTIMIZE_CONSTANTS_INITIALIZATION && value instanceof Const && this.ifStatementCount <= 0) {
+                // Optimize constants
+                symbol.setInitialValue((Const) value);
+                return new ParserVal(this.theProgram.createNoOpInst());
+            }
 
-        AssignInst inst = this.theProgram.createAssignInst(symbol, value);
-        symbol.markAsInitialized();
-        return (value instanceof ValueInst) ? rhs : new ParserVal(inst);
+            AssignInst inst = this.theProgram.createAssignInst(symbol, value);
+            symbol.markAsInitialized();
+            return (value instanceof ValueInst) ? rhs : new ParserVal(inst);
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
-    protected ParserVal id(ParserVal val) throws UndeclaredVariableException, UninitializedVariableException {
-        Token token = (Token) val.obj;
-        Symbol symbol = this.theProgram.findSymbolByName(token.getValue());
-        if (symbol == null) {
-            throw new UndeclaredVariableException(token);
+    protected ParserVal id(ParserVal val) {
+        try {
+            Token token = (Token) val.obj;
+            Symbol symbol = this.theProgram.findSymbolByName(token.getValue());
+            if (symbol == null) {
+                throw new UndeclaredVariableException(token);
+            }
+            if (! symbol.isInitialized()) {
+                throw new UninitializedVariableException(token);
+            }
+            return new ParserVal(symbol);
+        } catch (Exception e) {
+            return this.error(e);
         }
-        if (! symbol.isInitialized()) {
-            throw new UninitializedVariableException(token);
-        }
-        return new ParserVal(symbol);
     }
 
     protected ParserVal addOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
-        this.assertTypes(lhs, token, rhs);
-        return new ParserVal(this.theProgram.createAddInst((Value) lhs.obj, (Value) rhs.obj));
+        try {
+            this.assertTypes(lhs, token, rhs);
+            return new ParserVal(this.theProgram.createAddInst((Value) lhs.obj, (Value) rhs.obj));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal subOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
-        this.assertTypes(lhs, token, rhs);
-        return new ParserVal(this.theProgram.createSubInst((Value) lhs.obj, (Value) rhs.obj));
+        try {
+            this.assertTypes(lhs, token, rhs);
+            return new ParserVal(this.theProgram.createSubInst((Value) lhs.obj, (Value) rhs.obj));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal divOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
-        this.assertTypes(lhs, token, rhs);
-        return new ParserVal(this.theProgram.createDivInst((Value) lhs.obj, (Value) rhs.obj));
+        try {
+            this.assertTypes(lhs, token, rhs);
+            return new ParserVal(this.theProgram.createDivInst((Value) lhs.obj, (Value) rhs.obj));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal mulOp(ParserVal lhs, ParserVal token, ParserVal rhs) throws IncorrectArgumentTypeException {
-        this.assertTypes(lhs, token, rhs);
-        return new ParserVal(this.theProgram.createMulInst((Value) lhs.obj, (Value) rhs.obj));
+        try {
+            this.assertTypes(lhs, token, rhs);
+            return new ParserVal(this.theProgram.createMulInst((Value) lhs.obj, (Value) rhs.obj));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected ParserVal negOp(ParserVal op) {
-        return new ParserVal(this.theProgram.createNegInst((Value) op.obj));
+        try {
+            return new ParserVal(this.theProgram.createNegInst((Value) op.obj));
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
-    protected ParserVal itolOp(ParserVal tokenItol, ParserVal op) throws SemanticException {
-        Value val = (Value) op.obj;
-        if (val.getType() != ValueType.INT) {
-            throw new SemanticException((Token) tokenItol.obj, "ITOL function requires an INT parameter type. " + val.getType() + " parameter given.");
+    protected ParserVal itolOp(ParserVal tokenItol, ParserVal op) {
+        try {
+            Value val = (Value) op.obj;
+            if (val.getType() != ValueType.INT) {
+                throw new SemanticException((Token) tokenItol.obj, "ITOL function requires an INT parameter type. " + val.getType() + " parameter given.");
+            }
+            return new ParserVal(this.theProgram.createItolInst(val));
+        } catch (Exception e) {
+            return this.error(e);
         }
-        return new ParserVal(this.theProgram.createItolInst(val));
     }
 
     protected void printOp(ParserVal op) {
-        this.theProgram.createPrintInst((Value) op.obj);
+        try {
+            this.theProgram.createPrintInst((Value) op.obj);
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
-    protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) throws SyntaxException, IncorrectArgumentTypeException {
-        this.assertTypes(lhs, operator, rhs);
-        BranchCondition.RelOperator op = this.getRelOp((Token) operator.obj);
-        BranchCondition inst = this.theProgram.createBranchCondition((Value) lhs.obj, op, (Value) rhs.obj);
-        return new ParserVal(inst);
+    protected ParserVal branchCondition(ParserVal lhs, ParserVal operator, ParserVal rhs) {
+        try {
+            this.assertTypes(lhs, operator, rhs);
+            BranchCondition.RelOperator op = this.getRelOp((Token) operator.obj);
+            BranchCondition inst = this.theProgram.createBranchCondition((Value) lhs.obj, op, (Value) rhs.obj);
+            return new ParserVal(inst);
+        } catch (Exception e) {
+            return this.error(e);
+        }
     }
 
     protected void ifInst() {
-        this.theProgram.createNoOpInst();
-        this.branchesStack.pop().setTarget(this.theProgram.getLastInst());
-        this.ifStatementCount--;
+        try {
+            this.theProgram.createNoOpInst();
+            this.branchesStack.pop().setTarget(this.theProgram.getLastInst());
+            this.ifStatementCount--;
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void ifThenBlock() {
-        BranchInst branchInst = this.theProgram.createBranchInst();
-        this.theProgram.createNoOpInst();
-        this.branchesStack.pop().setTarget(this.theProgram.getLastInst());
-        this.branchesStack.push(branchInst);
+        try {
+            BranchInst branchInst = this.theProgram.createBranchInst();
+            this.theProgram.createNoOpInst();
+            this.branchesStack.pop().setTarget(this.theProgram.getLastInst());
+            this.branchesStack.push(branchInst);
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void ifCondition(ParserVal test) {
-        BranchCondition condition = (BranchCondition) test.obj;
-        condition.negateOperator();
-        BranchInst branchInst = this.theProgram.createBranchInst(condition);
-        this.branchesStack.push(branchInst);
-        this.ifStatementCount++;
+        try {
+            BranchCondition condition = (BranchCondition) test.obj;
+            condition.negateOperator();
+            BranchInst branchInst = this.theProgram.createBranchInst(condition);
+            this.branchesStack.push(branchInst);
+            this.ifStatementCount++;
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void loopKeyword() {
-        this.instructionStack.push(this.theProgram.createNoOpInst());
+        try {
+            this.instructionStack.push(this.theProgram.createNoOpInst());
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void loopCondition(ParserVal test) {
-        BranchCondition condition = (BranchCondition) test.obj;
-        condition.negateOperator();
-        BranchInst branchInst = this.theProgram.createBranchInst(condition);
-        branchInst.setTarget(this.instructionStack.pop());
+        try {
+            BranchCondition condition = (BranchCondition) test.obj;
+            condition.negateOperator();
+            BranchInst branchInst = this.theProgram.createBranchInst(condition);
+            branchInst.setTarget(this.instructionStack.pop());
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected BranchCondition.RelOperator getRelOp(Token token) throws SyntaxException {
@@ -207,16 +297,26 @@ public class BaseParser {
             case GTE:   return BranchCondition.RelOperator.GTE;
             case LT:    return BranchCondition.RelOperator.LT;
             case LTE:   return BranchCondition.RelOperator.LTE;
-            default: throw new SyntaxException(token, "Expected ==, <=, <, >=, > or <>.");
+            default:
+                this.error(new SyntaxException(token, "Expected ==, <=, <, >=, > or <>."));
+                return BranchCondition.RelOperator.EQ;
         }
     }
 
     protected void enterScope(ParserVal name) {
-        this.theProgram.enterScope(this.tokenVal(name));
+        try {
+            this.theProgram.enterScope(this.tokenVal(name));
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void exitScope() {
-        this.theProgram.exitScope();
+        try {
+            this.theProgram.exitScope();
+        } catch (Exception e) {
+            this.error(e);
+        }
     }
 
     protected void assertTypes(ParserVal lhs, ParserVal operator, ParserVal rhs) throws IncorrectArgumentTypeException {
@@ -230,6 +330,21 @@ public class BaseParser {
 
     protected void error(String s) {
         Fasta.getLogger().error(new SyntaxException(this.currentToken, s));
+        this.errorRecoveryMode = true;
+    }
+
+    private ParserVal error(Exception e) {
+        if (e instanceof FastaException) {
+            // Intended error. Report to the user and activate the error recovery mode
+            Fasta.getLogger().error(e);
+            this.errorRecoveryMode = true;
+        } else if (!this.errorRecoveryMode) {
+            // We are not in error recovery mode, and it is not a FastaException, it means
+            // it is a regular Java exception and it is not the intended behaviour, we should
+            // rethrow this and stop the application from continuing.
+            throw new RuntimeException(e);
+        }
+        return new ParserVal(null);
     }
 
     public void errorIfWithoutParens() {

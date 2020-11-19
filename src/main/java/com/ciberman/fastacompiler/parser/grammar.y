@@ -256,10 +256,6 @@ protected int yylex() throws IOException, LexicalException {
 }
 
 public IRProgram parse() throws IOException, FastaException {
-	try {
-		this.yyparse();
-	} catch (Exception e) {
-		Fasta.getLogger().error(e);
-	}
+	this.yyparse();
 	return this.getProgram();
 }

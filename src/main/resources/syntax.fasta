@@ -21,7 +21,7 @@ syntax {
     PRINT(a);              // Valid
 
 
-    IF (1_i + 2_i >= a) THEN               // Valid
+    IF (1_i + 2_i >= foo) THEN             // Invalid (Semantic, undeclared)
     BEGIN                                  // Valid
         PRINT 'Condition is false';        // Invalid
     END
@@ -32,7 +32,7 @@ syntax {
         PRINT 'Condition is true';         // Invalid
         a = a + 52_i * 2_i;                // Valid
         this is also invalid;              // Invalid
-        b = 58_l;                          // Valid
+        bar = 58_l;                        // Invalid (Semantic, undeclared)
     END
     ENDIF
 
@@ -41,11 +41,12 @@ syntax {
     Random unicode characters should be skipped too: 汉字
     #
 
-    LONG mylong;                             // Invalid
-    b = 6522_l / 56522_l * 2_l + ITOL(5_i);  // Valid
+    LONG mylong;                       // Invalid
+    b = 6522_l / 56522_l * 2_l + 5_i;  // Valid (Semantic, types incompatible)
 
     PRINT 'My long is ';      // Invalid
     PRINT(a);                 // Valid
+    PRINT(non_existent);      // Invalid (Semantic, undeclared)
 
     PRINT 'Hello world'       // Invalid
     PRINT('Valid')            // Invalid

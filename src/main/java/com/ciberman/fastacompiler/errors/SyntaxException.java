@@ -14,14 +14,11 @@ public class SyntaxException extends FastaException {
     private static String buildMessage(Token token, String message) {
         StringBuilder s = new StringBuilder();
 
-        s.append("Unexpected token \"")
+        s.append("Unexpected token ")
                 .append(token.getType().toString())
-                .append(" (")
-                .append(token.getType().code())
-                .append(")")
-                .append("\".");
+                .append(".");
 
-        if (! message.isBlank()) {
+        if (! message.isEmpty()) {
             s.append(" ").append(message);
         }
         return s.toString();

@@ -481,14 +481,10 @@ protected int yylex() throws IOException, LexicalException {
 }
 
 public IRProgram parse() throws IOException, FastaException {
-	try {
-		this.yyparse();
-	} catch (Exception e) {
-		Fasta.getLogger().error(e);
-	}
+	this.yyparse();
 	return this.getProgram();
 }
-//#line 418 "Parser.java"
+//#line 414 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -803,7 +799,7 @@ case 72:
 //#line 231 "grammar.y"
 { yyval = this.itolOp(val_peek(3), val_peek(1)); }
 break;
-//#line 727 "Parser.java"
+//#line 723 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

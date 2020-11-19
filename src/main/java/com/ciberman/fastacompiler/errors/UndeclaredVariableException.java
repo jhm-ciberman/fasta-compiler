@@ -5,6 +5,6 @@ import com.ciberman.fastacompiler.lexer.Token;
 public class UndeclaredVariableException extends SemanticException {
 
     public UndeclaredVariableException(Token token) {
-        super(token, "Attempting to reference an Undeclared variable \"" + token.getValue() + "\".");
+        super(token, "Attempting to reference an undeclared variable \"" + token.getValue() + "\".");
     }
 }
